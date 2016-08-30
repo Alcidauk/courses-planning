@@ -47,10 +47,12 @@ public class CoursesSpringApplication {
 
 			CalendarCoursesEventType classes = new CalendarCoursesEventType("cours");
 			CalendarCoursesEventType diploma = new CalendarCoursesEventType("concours");
-			coursesTypeRepo.save(Arrays.asList(classes, diploma));
+			CalendarCoursesEventType available = new CalendarCoursesEventType("Disponible");
+			coursesTypeRepo.save(Arrays.asList(classes, diploma, available));
 
 			coursesRepo.save(new CalendarCoursesEvent(getInstantFromStringDate("22/08/2016 05:00"), getInstantFromStringDate("22/08/2016 08:00"), classes, true));
 			coursesRepo.save(new CalendarCoursesEvent(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), diploma, true));
+			coursesRepo.save(new CalendarCoursesEvent(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), available, true));
 
 			planningPeriodRepository.save(new PlanningPeriod(getInstantFromStringDateWithSeconds("29/08/2016 00:00:00"),
 					getInstantFromStringDateWithSeconds("04/09/2016 23:59:59"),
