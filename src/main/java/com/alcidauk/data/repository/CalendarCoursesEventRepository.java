@@ -8,6 +8,7 @@ import com.vaadin.spring.annotation.UIScope;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -25,4 +26,9 @@ public interface CalendarCoursesEventRepository extends JpaRepository<CalendarCo
 
     List<CalendarCoursesEvent> findByType(CalendarCoursesEventType coursesEventType);
 
+    @Query("select e from CalendarCoursesEvent e where e.startInstant > ?1 and e.endInstant < ?2")
+    List<CalendarCoursesEvent> findBetweenStartInstantAndEndInstant(Instant startInstant, Instant endInstant);
+
+    @Query("select e from CalendarCoursesEvent e where e.startInstant > ?1 and e.endInstant < ?2 and e.type = ?3")
+    List<CalendarCoursesEvent> findBetweenStartInstantAndEndInstantAndType(Instant startInstant, Instant endInstant, CalendarCoursesEventType type);
 }

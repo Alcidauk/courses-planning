@@ -1,15 +1,14 @@
 package com.alcidauk.ui;
 
-import com.alcidauk.data.bean.CalendarCoursesEvent;
 import com.alcidauk.data.bean.CalendarCoursesEventType;
 import com.alcidauk.data.repository.CalendarCoursesEventRepository;
 import com.alcidauk.data.repository.CalendarCoursesEventTypeRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
 import com.alcidauk.login.CurrentUser;
+import com.alcidauk.ui.calendar.CalendarCoursesEventProvider;
 import com.alcidauk.ui.calendar.CalendarDetailWindow;
 import com.alcidauk.ui.calendar.CalendarTypeLayout;
 import com.alcidauk.ui.dto.CalendarCoursesEventBean;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 /**
  * Created by alcidauk on 22/08/16.
@@ -87,20 +85,21 @@ public class HomeLayout extends VerticalLayout {
         });
         chooseHoursButton.setWidth(100, Unit.PERCENTAGE);
 
-/*        Button periodPlanning = new Button("Choisir le planning de travail");
+        Button periodPlanning = new Button("Choisir le planning de travail");
         periodPlanning.addClickListener((Button.ClickListener) clickEvent -> {
             PeriodWindow window = new PeriodWindow(Instant.ofEpochMilli(calendar.getStartDate().getTime()),
                     Instant.ofEpochMilli(calendar.getEndDate().getTime()),
-                    planningPeriodRepository);
+                    coursesEventRepository, coursesEventTypeRepository);
 
             window.init();
 
             UI.getCurrent().addWindow(window);
             window.center();
         });
-        periodPlanning.setWidth(100, Unit.PERCENTAGE);*/
+        periodPlanning.setWidth(100, Unit.PERCENTAGE);
 
         rightLayout.addComponent(chooseHoursButton);
+        rightLayout.addComponent(periodPlanning);
         rightLayout.setMargin(true);
     }
 
@@ -121,16 +120,7 @@ public class HomeLayout extends VerticalLayout {
             }
         });
 
-        final BeanItemContainer<CalendarCoursesEventBean> container =
-                new BeanItemContainer<>(CalendarCoursesEventBean.class);
-
-        List<CalendarCoursesEvent> coursesEvents = coursesEventRepository.findAll();
-        List<CalendarCoursesEventBean> coursesEventBean = coursesEvents.stream()
-                .map(CalendarCoursesEventBean::new).collect(Collectors.toList());
-
-        container.addAll(coursesEventBean);
-        calendar.setContainerDataSource(container, "caption",
-                "description", "start", "end", "styleName");
+        calendar.setEventProvider(new CalendarCoursesEventProvider(coursesEventRepository));
 
         calendar.setHeight(100, Unit.PERCENTAGE);
         calendar.addStyleName("calendar");
