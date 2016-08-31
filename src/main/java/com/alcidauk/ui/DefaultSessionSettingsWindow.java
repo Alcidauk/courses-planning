@@ -13,9 +13,9 @@ import java.util.Locale;
 /**
  * Created by alcidauk on 29/08/16.
  */
-public class PeriodWindow extends Window {
+public class DefaultSessionSettingsWindow extends Window {
 
-    private static final Logger log = LoggerFactory.getLogger(PeriodWindow.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultSessionSettingsWindow.class);
 
     private DefaultSessionRepository defaultSessionRepository;
 
@@ -23,7 +23,7 @@ public class PeriodWindow extends Window {
 
     private Calendar calendar;
 
-    public PeriodWindow(DefaultSessionRepository defaultSessionRepository) {
+    public DefaultSessionSettingsWindow(DefaultSessionRepository defaultSessionRepository) {
         this.defaultSessionRepository = defaultSessionRepository;
     }
 

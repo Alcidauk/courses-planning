@@ -129,7 +129,7 @@ public class HomeLayout extends VerticalLayout {
 
         Button periodPlanning = new Button("Modifier les disponibilités par défaut");
         periodPlanning.addClickListener((Button.ClickListener) clickEvent -> {
-            PeriodWindow window = new PeriodWindow(defaultSessionRepository);
+            DefaultSessionSettingsWindow window = new DefaultSessionSettingsWindow(defaultSessionRepository);
 
             window.init();
 
