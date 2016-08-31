@@ -6,8 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +24,7 @@ public class CalendarCoursesEventType {
     private String name;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<CalendarCoursesEvent> calendarCoursesEvents;
+    private List<WorkSession> workSessions;
 
     public CalendarCoursesEventType() {
     }
@@ -52,11 +50,11 @@ public class CalendarCoursesEventType {
         this.id = id;
     }
 
-    public List<CalendarCoursesEvent> getCalendarCoursesEvents() {
-        return calendarCoursesEvents;
+    public List<WorkSession> getWorkSessions() {
+        return workSessions;
     }
 
-    public void setCalendarCoursesEvents(List<CalendarCoursesEvent> calendarCoursesEvents) {
-        this.calendarCoursesEvents = calendarCoursesEvents;
+    public void setWorkSessions(List<WorkSession> workSessions) {
+        this.workSessions = workSessions;
     }
 }

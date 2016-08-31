@@ -1,6 +1,6 @@
 package com.alcidauk.ui.calendar;
 
-import com.alcidauk.data.bean.CalendarCoursesEvent;
+import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.repository.CalendarCoursesEventRepository;
 import com.alcidauk.ui.CoursesUI;
 import com.alcidauk.ui.dto.CalendarCoursesEventBean;
@@ -11,8 +11,6 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * Created by alcidauk on 23/08/16.
@@ -43,7 +41,7 @@ public class CalendarDetailWindow extends Window {
 
         descriptionTxt = new TextArea("Description :");
 
-        calendarEventFieldGroup = new BeanFieldGroup<>(CalendarCoursesEvent.class);
+        calendarEventFieldGroup = new BeanFieldGroup<>(WorkSession.class);
         calendarEventFieldGroup.bind(doneCheck, "done");
         calendarEventFieldGroup.bind(descriptionTxt, "description");
         calendarEventFieldGroup.setItemDataSource(new BeanItem<>(calendarCoursesEventBean));
@@ -56,7 +54,7 @@ public class CalendarDetailWindow extends Window {
             } catch (FieldGroup.CommitException e) {
                 Notification.show("error");
             }
-            coursesEventRepository.save(calendarCoursesEventBean.getCalendarCoursesEvent());
+            coursesEventRepository.save(calendarCoursesEventBean.getWorkSession());
         });
 
         subContent.addComponent(doneCheck);
@@ -67,7 +65,7 @@ public class CalendarDetailWindow extends Window {
 
     private void fireEventChanged() {
         for(CalendarCoursesEventTypeListener listener :  ((CoursesUI) UI.getCurrent()).getCalendarCoursesEventTypeListeners()){
-            listener.update(new CalendarCoursesEventTypeUpdatedEvent(this, calendarCoursesEventBean.getCalendarCoursesEvent().getType()));
+            listener.update(new CalendarCoursesEventTypeUpdatedEvent(this, calendarCoursesEventBean.getWorkSession().getType()));
         }
     }
 }

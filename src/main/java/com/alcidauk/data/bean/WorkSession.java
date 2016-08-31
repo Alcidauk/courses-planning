@@ -8,7 +8,7 @@ import java.time.Instant;
  * Created by alcidauk on 20/08/16.
  */
 @Entity
-public class CalendarCoursesEvent {
+public class WorkSession {
 
     @Id
     @GeneratedValue
@@ -27,10 +27,10 @@ public class CalendarCoursesEvent {
     @ManyToOne(fetch = FetchType.EAGER)
     private CalendarCoursesEventType type;
 
-    public CalendarCoursesEvent() {
+    public WorkSession() {
     }
 
-    public CalendarCoursesEvent(Instant startInstant, Instant endInstant, CalendarCoursesEventType type, boolean isDone) {
+    public WorkSession(Instant startInstant, Instant endInstant, CalendarCoursesEventType type, boolean isDone) {
         this.startInstant = startInstant;
         this.endInstant = endInstant;
         this.type = type;

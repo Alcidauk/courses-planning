@@ -1,6 +1,6 @@
 package com.alcidauk.ui.calendar;
 
-import com.alcidauk.data.bean.CalendarCoursesEvent;
+import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.repository.CalendarCoursesEventRepository;
 import com.alcidauk.ui.dto.CalendarCoursesEventBean;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
@@ -27,9 +27,9 @@ public class CalendarCoursesEventProvider implements CalendarEventProvider {
 
     @Override
     public List<CalendarEvent> getEvents(Date start, Date end) {
-        List<CalendarCoursesEvent> calendarCoursesEvents = coursesEventRepository.findBetweenStartInstantAndEndInstant(start.toInstant(), end.toInstant());
+        List<WorkSession> workSessions = coursesEventRepository.findBetweenStartInstantAndEndInstant(start.toInstant(), end.toInstant());
 
-        log.info(calendarCoursesEvents.size() + "found !");
-        return calendarCoursesEvents.stream().map(CalendarCoursesEventBean::new).collect(Collectors.toList());
+        log.info(workSessions.size() + "found !");
+        return workSessions.stream().map(CalendarCoursesEventBean::new).collect(Collectors.toList());
     }
 }

@@ -1,8 +1,6 @@
 package com.alcidauk.ui.dto;
 
-import com.alcidauk.data.bean.CalendarCoursesEvent;
-import com.alcidauk.data.bean.CalendarCoursesEventType;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
+import com.alcidauk.data.bean.WorkSession;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
 import java.util.Date;
@@ -12,36 +10,36 @@ import java.util.Date;
  */
 public class CalendarCoursesEventBean implements CalendarEvent {
 
-    private CalendarCoursesEvent calendarCoursesEvent;
+    private WorkSession workSession;
 
-    public CalendarCoursesEventBean(CalendarCoursesEvent calendarCoursesEvent) {
-        this.calendarCoursesEvent = calendarCoursesEvent;
+    public CalendarCoursesEventBean(WorkSession workSession) {
+        this.workSession = workSession;
     }
 
     @Override
     public Date getStart() {
-        return Date.from(calendarCoursesEvent.getStartInstant());
+        return Date.from(workSession.getStartInstant());
     }
 
     @Override
     public Date getEnd() {
-        return Date.from(calendarCoursesEvent.getEndInstant());
+        return Date.from(workSession.getEndInstant());
     }
 
     @Override
     public String getCaption() {
-        return calendarCoursesEvent.getTitle() != null ?
-                calendarCoursesEvent.getTitle() : calendarCoursesEvent.getType().getName();
+        return workSession.getTitle() != null ?
+                workSession.getTitle() : workSession.getType().getName();
     }
 
     @Override
     public String getDescription() {
-        return calendarCoursesEvent.getDescription();
+        return workSession.getDescription();
     }
 
     @Override
     public String getStyleName() {
-        return calendarCoursesEvent.getType().getName();
+        return workSession.getType().getName();
     }
 
     @Override
@@ -49,16 +47,16 @@ public class CalendarCoursesEventBean implements CalendarEvent {
         return false;
     }
 
-    public CalendarCoursesEvent getCalendarCoursesEvent() {
-        return calendarCoursesEvent;
+    public WorkSession getWorkSession() {
+        return workSession;
     }
 
     public boolean getDone(){
-        return calendarCoursesEvent.isDone();
+        return workSession.isDone();
     }
 
     public void setDone(boolean done){
-        calendarCoursesEvent.setDone(done);
+        workSession.setDone(done);
     }
 
 }
