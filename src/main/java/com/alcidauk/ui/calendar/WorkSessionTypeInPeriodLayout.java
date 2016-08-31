@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by alcidauk on 23/08/16.
  */
-public class CalendarTypeLayout extends VerticalLayout implements WorkSessionTypeListener {
+public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements WorkSessionTypeListener {
 
-    private static final Logger log = LoggerFactory.getLogger(CalendarTypeLayout.class);
+    private static final Logger log = LoggerFactory.getLogger(WorkSessionTypeInPeriodLayout.class);
 
 
     private WorkSessionType workSessionType;
@@ -26,7 +26,7 @@ public class CalendarTypeLayout extends VerticalLayout implements WorkSessionTyp
     private Label doneEvents;
     private Label leftEvents;
 
-    public CalendarTypeLayout(WorkSessionRepository workSessionRepository, WorkSessionType workSessionType) {
+    public WorkSessionTypeInPeriodLayout(WorkSessionRepository workSessionRepository, WorkSessionType workSessionType) {
         this.workSessionType = workSessionType;
         this.workSessionRepository = workSessionRepository;
     }

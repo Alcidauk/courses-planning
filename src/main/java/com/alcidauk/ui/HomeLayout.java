@@ -7,8 +7,8 @@ import com.alcidauk.data.repository.DefaultSessionRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
 import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.calendar.WorkSessionCalendarEventProvider;
-import com.alcidauk.ui.calendar.CalendarDetailWindow;
-import com.alcidauk.ui.calendar.CalendarTypeLayout;
+import com.alcidauk.ui.calendar.WorkSessionSettingsWindow;
+import com.alcidauk.ui.calendar.WorkSessionTypeInPeriodLayout;
 import com.alcidauk.ui.dto.WorkSessionCalendarEventBean;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -67,13 +67,13 @@ public class HomeLayout extends VerticalLayout {
 
         List<WorkSessionType> workSessionTypes = workSessionTypeRepository.findAll();
         for(WorkSessionType workSessionType : workSessionTypes){
-            CalendarTypeLayout calendarTypeLayout = new CalendarTypeLayout(workSessionRepository, workSessionType);
-            calendarTypeLayout.init();
+            WorkSessionTypeInPeriodLayout workSessionTypeInPeriodLayout = new WorkSessionTypeInPeriodLayout(workSessionRepository, workSessionType);
+            workSessionTypeInPeriodLayout.init();
 
-            calendarTypeLayout.setWidth(100, Unit.PERCENTAGE);
-            calendarTypeLayout.addStyleName("grey-background");
+            workSessionTypeInPeriodLayout.setWidth(100, Unit.PERCENTAGE);
+            workSessionTypeInPeriodLayout.addStyleName("grey-background");
 
-            rightLayout.addComponent(calendarTypeLayout);
+            rightLayout.addComponent(workSessionTypeInPeriodLayout);
         }
 
         Button chooseHoursButton = new Button("Choisir les nombres d'heures");
@@ -101,12 +101,12 @@ public class HomeLayout extends VerticalLayout {
 
         calendar.setHandler(new CalendarComponentEvents.EventClickHandler() {
             public void eventClick(CalendarComponentEvents.EventClick event) {
-                CalendarDetailWindow calendarDetailWindow =
-                        new CalendarDetailWindow(workSessionRepository, (WorkSessionCalendarEventBean) event.getCalendarEvent());
-                calendarDetailWindow.init();
+                WorkSessionSettingsWindow workSessionSettingsWindow =
+                        new WorkSessionSettingsWindow(workSessionRepository, (WorkSessionCalendarEventBean) event.getCalendarEvent());
+                workSessionSettingsWindow.init();
 
-                UI.getCurrent().addWindow(calendarDetailWindow);
-                calendarDetailWindow.center();
+                UI.getCurrent().addWindow(workSessionSettingsWindow);
+                workSessionSettingsWindow.center();
             }
         });
 

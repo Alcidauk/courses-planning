@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by alcidauk on 23/08/16.
  */
-public class CalendarDetailWindow extends Window {
+public class WorkSessionSettingsWindow extends Window {
 
-    private static final Logger log = LoggerFactory.getLogger(CalendarDetailWindow.class);
+    private static final Logger log = LoggerFactory.getLogger(WorkSessionSettingsWindow.class);
 
     private WorkSessionCalendarEventBean workSessionCalendarEventBean;
 
@@ -28,7 +28,7 @@ public class CalendarDetailWindow extends Window {
 
     private FieldGroup calendarEventFieldGroup;
 
-    public CalendarDetailWindow(WorkSessionRepository workSessionRepository, WorkSessionCalendarEventBean workSessionCalendarEventBean) {
+    public WorkSessionSettingsWindow(WorkSessionRepository workSessionRepository, WorkSessionCalendarEventBean workSessionCalendarEventBean) {
         this.workSessionCalendarEventBean = workSessionCalendarEventBean;
         this.workSessionRepository = workSessionRepository;
     }
