@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 @SpringComponent
 @UIScope
-public interface CalendarCoursesEventTypeRepository extends JpaRepository<WorkSessionType, Long> {
+public interface WorkSessionTypeRepository extends JpaRepository<WorkSessionType, Long> {
 
     WorkSessionType findByName(String name);
 

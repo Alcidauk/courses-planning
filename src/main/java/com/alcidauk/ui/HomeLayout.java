@@ -2,7 +2,7 @@ package com.alcidauk.ui;
 
 import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.WorkSessionRepository;
-import com.alcidauk.data.repository.CalendarCoursesEventTypeRepository;
+import com.alcidauk.data.repository.WorkSessionTypeRepository;
 import com.alcidauk.data.repository.DefaultSessionRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
 import com.alcidauk.login.CurrentUser;
@@ -37,7 +37,7 @@ public class HomeLayout extends VerticalLayout {
     private WorkSessionRepository workSessionRepository;
 
     @Autowired
-    private CalendarCoursesEventTypeRepository coursesEventTypeRepository;
+    private WorkSessionTypeRepository workSessionTypeRepository;
 
     @Autowired
     private PlanningPeriodRepository planningPeriodRepository;
@@ -65,7 +65,7 @@ public class HomeLayout extends VerticalLayout {
     private void createRightLayout() {
         rightLayout = new VerticalLayout();
 
-        List<WorkSessionType> workSessionTypes = coursesEventTypeRepository.findAll();
+        List<WorkSessionType> workSessionTypes = workSessionTypeRepository.findAll();
         for(WorkSessionType workSessionType : workSessionTypes){
             CalendarTypeLayout calendarTypeLayout = new CalendarTypeLayout(workSessionRepository, workSessionType);
             calendarTypeLayout.init();

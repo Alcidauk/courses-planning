@@ -35,7 +35,7 @@ public class CoursesSpringApplication {
 
 	@Bean
 	public CommandLineRunner loadData(UserRepository repository, WorkSessionRepository workSessionRepository,
-									  CalendarCoursesEventTypeRepository coursesTypeRepo, PlanningPeriodRepository planningPeriodRepository,
+									  WorkSessionTypeRepository coursesTypeRepo, PlanningPeriodRepository planningPeriodRepository,
 									  PlanningPeriodEventTypeRepository periodEventTypeRepository, DefaultSessionRepository defaultSessionRepository) {
 		return (args) -> {
 			// save a couple of customers
