@@ -42,9 +42,9 @@ public class CoursesSpringApplication {
 			repository.save(new User("Titine", "Totot"));
 			repository.save(new User("John", "Doe"));
 
-			CalendarCoursesEventType classes = new CalendarCoursesEventType("cours");
-			CalendarCoursesEventType diploma = new CalendarCoursesEventType("concours");
-			CalendarCoursesEventType available = new CalendarCoursesEventType("Disponible");
+			WorkSessionType classes = new WorkSessionType("cours");
+			WorkSessionType diploma = new WorkSessionType("concours");
+			WorkSessionType available = new WorkSessionType("Disponible");
 			coursesTypeRepo.save(Arrays.asList(classes, diploma, available));
 
 			workSessionRepository.save(new WorkSession(getInstantFromStringDate("22/08/2016 05:00"), getInstantFromStringDate("22/08/2016 08:00"), classes, true));

@@ -1,6 +1,6 @@
 package com.alcidauk.ui.calendar;
 
-import com.alcidauk.data.bean.CalendarCoursesEventType;
+import com.alcidauk.data.bean.WorkSessionType;
 import com.vaadin.ui.Component;
 
 /**
@@ -8,14 +8,14 @@ import com.vaadin.ui.Component;
  */
 public class CalendarCoursesEventTypeUpdatedEvent extends Component.Event{
 
-    private CalendarCoursesEventType calendarCoursesEventType;
+    private WorkSessionType workSessionType;
 
-    public CalendarCoursesEventTypeUpdatedEvent(Component source, CalendarCoursesEventType calendarCoursesEventType) {
+    public CalendarCoursesEventTypeUpdatedEvent(Component source, WorkSessionType workSessionType) {
         super(source);
-        this.calendarCoursesEventType = calendarCoursesEventType;
+        this.workSessionType = workSessionType;
     }
 
-    public CalendarCoursesEventType getCalendarCoursesEventType() {
-        return calendarCoursesEventType;
+    public WorkSessionType getWorkSessionType() {
+        return workSessionType;
     }
 }

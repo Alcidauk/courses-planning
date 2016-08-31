@@ -1,6 +1,6 @@
 package com.alcidauk.ui.calendar;
 
-import com.alcidauk.data.bean.CalendarCoursesEventType;
+import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.ui.CoursesUI;
 import com.vaadin.ui.Label;
@@ -18,7 +18,7 @@ public class CalendarTypeLayout extends VerticalLayout implements CalendarCourse
     private static final Logger log = LoggerFactory.getLogger(CalendarTypeLayout.class);
 
 
-    private CalendarCoursesEventType calendarCoursesEventType;
+    private WorkSessionType workSessionType;
     private WorkSessionRepository workSessionRepository;
 
     private Label calendarTypeLabel;
@@ -26,13 +26,13 @@ public class CalendarTypeLayout extends VerticalLayout implements CalendarCourse
     private Label doneEvents;
     private Label leftEvents;
 
-    public CalendarTypeLayout(WorkSessionRepository workSessionRepository, CalendarCoursesEventType calendarCoursesEventType) {
-        this.calendarCoursesEventType = calendarCoursesEventType;
+    public CalendarTypeLayout(WorkSessionRepository workSessionRepository, WorkSessionType workSessionType) {
+        this.workSessionType = workSessionType;
         this.workSessionRepository = workSessionRepository;
     }
 
     public void init(){
-        calendarTypeLabel = new Label(StringUtils.capitalize(calendarCoursesEventType.getName()) + " : ");
+        calendarTypeLabel = new Label(StringUtils.capitalize(workSessionType.getName()) + " : ");
         calendarTypeLabel.addStyleName("bold-font");
 
         doneEvents = new Label(getDoneTextValue());
@@ -51,17 +51,17 @@ public class CalendarTypeLayout extends VerticalLayout implements CalendarCourse
     }
 
     private String getLeftTextValue() {
-        return "Session(s) restante(s) " + workSessionRepository.findLeftByType(calendarCoursesEventType).size();
+        return "Session(s) restante(s) " + workSessionRepository.findLeftByType(workSessionType).size();
     }
 
     private String getDoneTextValue() {
-        return "Session(s) réalisée(s) " + workSessionRepository.findDoneByType(calendarCoursesEventType).size();
+        return "Session(s) réalisée(s) " + workSessionRepository.findDoneByType(workSessionType).size();
     }
 
     @Override
     public void update(CalendarCoursesEventTypeUpdatedEvent calendarCoursesEventTypeUpdatedEvent) {
-        if(calendarCoursesEventTypeUpdatedEvent.getCalendarCoursesEventType().getId().equals(calendarCoursesEventType.getId())) {
-            calendarCoursesEventType = calendarCoursesEventTypeUpdatedEvent.getCalendarCoursesEventType();
+        if(calendarCoursesEventTypeUpdatedEvent.getWorkSessionType().getId().equals(workSessionType.getId())) {
+            workSessionType = calendarCoursesEventTypeUpdatedEvent.getWorkSessionType();
             updateLabels();
         }
     }

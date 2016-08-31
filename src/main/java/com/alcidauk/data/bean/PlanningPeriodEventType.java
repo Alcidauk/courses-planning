@@ -17,12 +17,12 @@ public class PlanningPeriodEventType {
     private Duration periodDuration;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private CalendarCoursesEventType type;
+    private WorkSessionType type;
 
     public PlanningPeriodEventType() {
     }
 
-    public PlanningPeriodEventType(Duration periodDuration, CalendarCoursesEventType type) {
+    public PlanningPeriodEventType(Duration periodDuration, WorkSessionType type) {
         this.periodDuration = periodDuration;
         this.type = type;
     }
@@ -43,11 +43,11 @@ public class PlanningPeriodEventType {
         this.periodDuration = periodDuration;
     }
 
-    public CalendarCoursesEventType getType() {
+    public WorkSessionType getType() {
         return type;
     }
 
-    public void setType(CalendarCoursesEventType type) {
+    public void setType(WorkSessionType type) {
         this.type = type;
     }
 }

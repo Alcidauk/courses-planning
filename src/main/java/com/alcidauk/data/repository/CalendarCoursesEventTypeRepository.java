@@ -1,20 +1,17 @@
 package com.alcidauk.data.repository;
 
-import com.alcidauk.data.bean.CalendarCoursesEventType;
-import com.alcidauk.data.bean.User;
+import com.alcidauk.data.bean.WorkSessionType;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
 
 /**
  * Created by alcidauk on 20/08/16.
  */
 @SpringComponent
 @UIScope
-public interface CalendarCoursesEventTypeRepository extends JpaRepository<CalendarCoursesEventType, Long> {
+public interface CalendarCoursesEventTypeRepository extends JpaRepository<WorkSessionType, Long> {
 
-    CalendarCoursesEventType findByName(String name);
+    WorkSessionType findByName(String name);
 
 }

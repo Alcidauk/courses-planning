@@ -25,12 +25,12 @@ public class WorkSession {
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private CalendarCoursesEventType type;
+    private WorkSessionType type;
 
     public WorkSession() {
     }
 
-    public WorkSession(Instant startInstant, Instant endInstant, CalendarCoursesEventType type, boolean isDone) {
+    public WorkSession(Instant startInstant, Instant endInstant, WorkSessionType type, boolean isDone) {
         this.startInstant = startInstant;
         this.endInstant = endInstant;
         this.type = type;
@@ -61,11 +61,11 @@ public class WorkSession {
         this.endInstant = endInstant;
     }
 
-    public CalendarCoursesEventType getType() {
+    public WorkSessionType getType() {
         return type;
     }
 
-    public void setType(CalendarCoursesEventType type) {
+    public void setType(WorkSessionType type) {
         this.type = type;
     }
 

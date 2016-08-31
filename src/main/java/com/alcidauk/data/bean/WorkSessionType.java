@@ -12,7 +12,7 @@ import java.util.List;
  * Created by alcidauk on 20/08/16.
  */
 @Entity
-public class CalendarCoursesEventType {
+public class WorkSessionType {
 
     private static final Logger log = LoggerFactory.getLogger(CoursesSpringApplication.class);
 
@@ -26,10 +26,10 @@ public class CalendarCoursesEventType {
     @OneToMany(fetch = FetchType.EAGER)
     private List<WorkSession> workSessions;
 
-    public CalendarCoursesEventType() {
+    public WorkSessionType() {
     }
 
-    public CalendarCoursesEventType(String name) {
+    public WorkSessionType(String name) {
         this.name = name;
     }
 
