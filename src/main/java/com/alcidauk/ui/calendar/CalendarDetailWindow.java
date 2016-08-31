@@ -64,8 +64,8 @@ public class CalendarDetailWindow extends Window {
     }
 
     private void fireEventChanged() {
-        for(CalendarCoursesEventTypeListener listener :  ((CoursesUI) UI.getCurrent()).getCalendarCoursesEventTypeListeners()){
-            listener.update(new CalendarCoursesEventTypeUpdatedEvent(this, workSessionCalendarEventBean.getWorkSession().getType()));
+        for(WorkSessionTypeListener listener :  ((CoursesUI) UI.getCurrent()).getWorkSessionTypeListeners()){
+            listener.update(new WorkSessionTypeUpdatedEvent(this, workSessionCalendarEventBean.getWorkSession().getType()));
         }
     }
 }

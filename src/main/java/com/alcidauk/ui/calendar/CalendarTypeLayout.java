@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by alcidauk on 23/08/16.
  */
-public class CalendarTypeLayout extends VerticalLayout implements CalendarCoursesEventTypeListener{
+public class CalendarTypeLayout extends VerticalLayout implements WorkSessionTypeListener {
 
     private static final Logger log = LoggerFactory.getLogger(CalendarTypeLayout.class);
 
@@ -59,9 +59,9 @@ public class CalendarTypeLayout extends VerticalLayout implements CalendarCourse
     }
 
     @Override
-    public void update(CalendarCoursesEventTypeUpdatedEvent calendarCoursesEventTypeUpdatedEvent) {
-        if(calendarCoursesEventTypeUpdatedEvent.getWorkSessionType().getId().equals(workSessionType.getId())) {
-            workSessionType = calendarCoursesEventTypeUpdatedEvent.getWorkSessionType();
+    public void update(WorkSessionTypeUpdatedEvent workSessionTypeUpdatedEvent) {
+        if(workSessionTypeUpdatedEvent.getWorkSessionType().getId().equals(workSessionType.getId())) {
+            workSessionType = workSessionTypeUpdatedEvent.getWorkSessionType();
             updateLabels();
         }
     }

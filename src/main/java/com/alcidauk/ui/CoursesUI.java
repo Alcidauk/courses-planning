@@ -2,7 +2,7 @@ package com.alcidauk.ui;
 
 import com.alcidauk.data.repository.UserRepository;
 import com.alcidauk.login.AccessControl;
-import com.alcidauk.ui.calendar.CalendarCoursesEventTypeListener;
+import com.alcidauk.ui.calendar.WorkSessionTypeListener;
 import com.ejt.vaadin.loginform.DefaultVerticalLoginForm;
 import com.ejt.vaadin.loginform.LoginForm;
 import com.vaadin.annotations.Theme;
@@ -28,7 +28,7 @@ public class CoursesUI extends UI {
 
     private static final Logger log = LoggerFactory.getLogger(CoursesUI.class);
 
-    private List<CalendarCoursesEventTypeListener> calendarCoursesEventTypeListeners;
+    private List<WorkSessionTypeListener> workSessionTypeListeners;
 
     @Autowired
     private UserRepository userRepository;
@@ -41,7 +41,7 @@ public class CoursesUI extends UI {
     protected void init(VaadinRequest vaadinRequest) {
         UI.getCurrent().setLocale(Locale.FRANCE);
 
-        calendarCoursesEventTypeListeners = new ArrayList<>();
+        workSessionTypeListeners = new ArrayList<>();
 
         if (!accessControl.isUserSignedIn()) {
             DefaultVerticalLoginForm loginForm = new DefaultVerticalLoginForm();
@@ -70,11 +70,11 @@ public class CoursesUI extends UI {
         //getNavigator().navigateTo(getNavigator().getState());
     }
 
-    public List<CalendarCoursesEventTypeListener> getCalendarCoursesEventTypeListeners() {
-        return calendarCoursesEventTypeListeners;
+    public List<WorkSessionTypeListener> getWorkSessionTypeListeners() {
+        return workSessionTypeListeners;
     }
 
-    public void addCalendarCoursesEventTypeListeners(CalendarCoursesEventTypeListener listener){
-        calendarCoursesEventTypeListeners.add(listener);
+    public void addCalendarCoursesEventTypeListeners(WorkSessionTypeListener listener){
+        workSessionTypeListeners.add(listener);
     }
 }
