@@ -6,10 +6,10 @@ import com.alcidauk.data.repository.WorkSessionTypeRepository;
 import com.alcidauk.data.repository.DefaultSessionRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
 import com.alcidauk.login.CurrentUser;
-import com.alcidauk.ui.calendar.CalendarCoursesEventProvider;
+import com.alcidauk.ui.calendar.WorkSessionCalendarEventProvider;
 import com.alcidauk.ui.calendar.CalendarDetailWindow;
 import com.alcidauk.ui.calendar.CalendarTypeLayout;
-import com.alcidauk.ui.dto.CalendarCoursesEventBean;
+import com.alcidauk.ui.dto.WorkSessionCalendarEventBean;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
@@ -102,7 +102,7 @@ public class HomeLayout extends VerticalLayout {
         calendar.setHandler(new CalendarComponentEvents.EventClickHandler() {
             public void eventClick(CalendarComponentEvents.EventClick event) {
                 CalendarDetailWindow calendarDetailWindow =
-                        new CalendarDetailWindow(workSessionRepository, (CalendarCoursesEventBean) event.getCalendarEvent());
+                        new CalendarDetailWindow(workSessionRepository, (WorkSessionCalendarEventBean) event.getCalendarEvent());
                 calendarDetailWindow.init();
 
                 UI.getCurrent().addWindow(calendarDetailWindow);
@@ -110,7 +110,7 @@ public class HomeLayout extends VerticalLayout {
             }
         });
 
-        calendar.setEventProvider(new CalendarCoursesEventProvider(workSessionRepository));
+        calendar.setEventProvider(new WorkSessionCalendarEventProvider(workSessionRepository));
 
         calendar.setHeight(100, Unit.PERCENTAGE);
         calendar.addStyleName("calendar");

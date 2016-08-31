@@ -8,11 +8,11 @@ import java.util.Date;
 /**
  * Created by alcidauk on 23/08/16.
  */
-public class CalendarCoursesEventBean implements CalendarEvent {
+public class WorkSessionCalendarEventBean implements CalendarEvent {
 
     private WorkSession workSession;
 
-    public CalendarCoursesEventBean(WorkSession workSession) {
+    public WorkSessionCalendarEventBean(WorkSession workSession) {
         this.workSession = workSession;
     }
 

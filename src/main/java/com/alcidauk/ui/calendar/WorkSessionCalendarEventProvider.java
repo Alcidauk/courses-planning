@@ -2,7 +2,7 @@ package com.alcidauk.ui.calendar;
 
 import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.repository.WorkSessionRepository;
-import com.alcidauk.ui.dto.CalendarCoursesEventBean;
+import com.alcidauk.ui.dto.WorkSessionCalendarEventBean;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 import org.slf4j.Logger;
@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 /**
  * Created by alcidauk on 30/08/16.
  */
-public class CalendarCoursesEventProvider implements CalendarEventProvider {
+public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
 
     private WorkSessionRepository workSessionRepository;
 
-    private static final Logger log = LoggerFactory.getLogger(CalendarCoursesEventProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(WorkSessionCalendarEventProvider.class);
 
-    public CalendarCoursesEventProvider(WorkSessionRepository workSessionRepository) {
+    public WorkSessionCalendarEventProvider(WorkSessionRepository workSessionRepository) {
         this.workSessionRepository = workSessionRepository;
     }
 
@@ -30,6 +30,6 @@ public class CalendarCoursesEventProvider implements CalendarEventProvider {
         List<WorkSession> workSessions = workSessionRepository.findBetweenStartInstantAndEndInstant(start.toInstant(), end.toInstant());
 
         log.info(workSessions.size() + "found !");
-        return workSessions.stream().map(CalendarCoursesEventBean::new).collect(Collectors.toList());
+        return workSessions.stream().map(WorkSessionCalendarEventBean::new).collect(Collectors.toList());
     }
 }

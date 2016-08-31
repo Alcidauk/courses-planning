@@ -18,12 +18,12 @@ import java.util.List;
 public interface WorkSessionRepository extends JpaRepository<WorkSession, Long> {
 
     @Query("select e from WorkSession e where e.type = ?1 and e.done = true")
-    List<WorkSession> findDoneByType(WorkSessionType coursesEventType);
+    List<WorkSession> findDoneByType(WorkSessionType workSessionType);
 
     @Query("select e from WorkSession e where e.type = ?1 and e.done = false")
-    List<WorkSession> findLeftByType(WorkSessionType coursesEventType);
+    List<WorkSession> findLeftByType(WorkSessionType workSessionType);
 
-    List<WorkSession> findByType(WorkSessionType coursesEventType);
+    List<WorkSession> findByType(WorkSessionType workSessionType);
 
     @Query("select e from WorkSession e where e.startInstant > ?1 and e.endInstant < ?2")
     List<WorkSession> findBetweenStartInstantAndEndInstant(Instant startInstant, Instant endInstant);

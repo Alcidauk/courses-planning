@@ -3,7 +3,7 @@ package com.alcidauk.ui.calendar;
 import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.ui.CoursesUI;
-import com.alcidauk.ui.dto.CalendarCoursesEventBean;
+import com.alcidauk.ui.dto.WorkSessionCalendarEventBean;
 import com.vaadin.data.Property;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
@@ -19,7 +19,7 @@ public class CalendarDetailWindow extends Window {
 
     private static final Logger log = LoggerFactory.getLogger(CalendarDetailWindow.class);
 
-    private CalendarCoursesEventBean calendarCoursesEventBean;
+    private WorkSessionCalendarEventBean workSessionCalendarEventBean;
 
     private WorkSessionRepository workSessionRepository;
 
@@ -28,8 +28,8 @@ public class CalendarDetailWindow extends Window {
 
     private FieldGroup calendarEventFieldGroup;
 
-    public CalendarDetailWindow(WorkSessionRepository workSessionRepository, CalendarCoursesEventBean calendarCoursesEventBean) {
-        this.calendarCoursesEventBean = calendarCoursesEventBean;
+    public CalendarDetailWindow(WorkSessionRepository workSessionRepository, WorkSessionCalendarEventBean workSessionCalendarEventBean) {
+        this.workSessionCalendarEventBean = workSessionCalendarEventBean;
         this.workSessionRepository = workSessionRepository;
     }
 
@@ -44,7 +44,7 @@ public class CalendarDetailWindow extends Window {
         calendarEventFieldGroup = new BeanFieldGroup<>(WorkSession.class);
         calendarEventFieldGroup.bind(doneCheck, "done");
         calendarEventFieldGroup.bind(descriptionTxt, "description");
-        calendarEventFieldGroup.setItemDataSource(new BeanItem<>(calendarCoursesEventBean));
+        calendarEventFieldGroup.setItemDataSource(new BeanItem<>(workSessionCalendarEventBean));
 
         doneCheck.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
             try {
@@ -54,18 +54,18 @@ public class CalendarDetailWindow extends Window {
             } catch (FieldGroup.CommitException e) {
                 Notification.show("error");
             }
-            workSessionRepository.save(calendarCoursesEventBean.getWorkSession());
+            workSessionRepository.save(workSessionCalendarEventBean.getWorkSession());
         });
 
         subContent.addComponent(doneCheck);
 
-        setCaption(calendarCoursesEventBean.getCaption());
+        setCaption(workSessionCalendarEventBean.getCaption());
         setContent(subContent);
     }
 
     private void fireEventChanged() {
         for(CalendarCoursesEventTypeListener listener :  ((CoursesUI) UI.getCurrent()).getCalendarCoursesEventTypeListeners()){
-            listener.update(new CalendarCoursesEventTypeUpdatedEvent(this, calendarCoursesEventBean.getWorkSession().getType()));
+            listener.update(new CalendarCoursesEventTypeUpdatedEvent(this, workSessionCalendarEventBean.getWorkSession().getType()));
         }
     }
 }
