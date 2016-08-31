@@ -34,7 +34,7 @@ public class CoursesSpringApplication {
 	}
 
 	@Bean
-	public CommandLineRunner loadData(UserRepository repository, CalendarCoursesEventRepository coursesRepo,
+	public CommandLineRunner loadData(UserRepository repository, WorkSessionRepository workSessionRepository,
 									  CalendarCoursesEventTypeRepository coursesTypeRepo, PlanningPeriodRepository planningPeriodRepository,
 									  PlanningPeriodEventTypeRepository periodEventTypeRepository, DefaultSessionRepository defaultSessionRepository) {
 		return (args) -> {
@@ -47,9 +47,9 @@ public class CoursesSpringApplication {
 			CalendarCoursesEventType available = new CalendarCoursesEventType("Disponible");
 			coursesTypeRepo.save(Arrays.asList(classes, diploma, available));
 
-			coursesRepo.save(new WorkSession(getInstantFromStringDate("22/08/2016 05:00"), getInstantFromStringDate("22/08/2016 08:00"), classes, true));
-			coursesRepo.save(new WorkSession(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), diploma, true));
-			coursesRepo.save(new WorkSession(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), available, true));
+			workSessionRepository.save(new WorkSession(getInstantFromStringDate("22/08/2016 05:00"), getInstantFromStringDate("22/08/2016 08:00"), classes, true));
+			workSessionRepository.save(new WorkSession(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), diploma, true));
+			workSessionRepository.save(new WorkSession(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), available, true));
 
 
 			PlanningPeriodEventType coursesPeriod = new PlanningPeriodEventType(Duration.ofHours(10), classes);

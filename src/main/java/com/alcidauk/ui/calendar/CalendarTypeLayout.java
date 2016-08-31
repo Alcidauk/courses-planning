@@ -1,9 +1,8 @@
 package com.alcidauk.ui.calendar;
 
 import com.alcidauk.data.bean.CalendarCoursesEventType;
-import com.alcidauk.data.repository.CalendarCoursesEventRepository;
+import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.ui.CoursesUI;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -20,16 +19,16 @@ public class CalendarTypeLayout extends VerticalLayout implements CalendarCourse
 
 
     private CalendarCoursesEventType calendarCoursesEventType;
-    private CalendarCoursesEventRepository coursesEventRepository;
+    private WorkSessionRepository workSessionRepository;
 
     private Label calendarTypeLabel;
 
     private Label doneEvents;
     private Label leftEvents;
 
-    public CalendarTypeLayout(CalendarCoursesEventRepository calendarCoursesEventRepository, CalendarCoursesEventType calendarCoursesEventType) {
+    public CalendarTypeLayout(WorkSessionRepository workSessionRepository, CalendarCoursesEventType calendarCoursesEventType) {
         this.calendarCoursesEventType = calendarCoursesEventType;
-        this.coursesEventRepository = calendarCoursesEventRepository;
+        this.workSessionRepository = workSessionRepository;
     }
 
     public void init(){
@@ -52,11 +51,11 @@ public class CalendarTypeLayout extends VerticalLayout implements CalendarCourse
     }
 
     private String getLeftTextValue() {
-        return "Session(s) restante(s) " + coursesEventRepository.findLeftByType(calendarCoursesEventType).size();
+        return "Session(s) restante(s) " + workSessionRepository.findLeftByType(calendarCoursesEventType).size();
     }
 
     private String getDoneTextValue() {
-        return "Session(s) réalisée(s) " + coursesEventRepository.findDoneByType(calendarCoursesEventType).size();
+        return "Session(s) réalisée(s) " + workSessionRepository.findDoneByType(calendarCoursesEventType).size();
     }
 
     @Override

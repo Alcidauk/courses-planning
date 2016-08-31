@@ -15,7 +15,7 @@ import java.util.List;
  */
 @SpringComponent
 @UIScope
-public interface CalendarCoursesEventRepository extends JpaRepository<WorkSession, Long> {
+public interface WorkSessionRepository extends JpaRepository<WorkSession, Long> {
 
     @Query("select e from WorkSession e where e.type = ?1 and e.done = true")
     List<WorkSession> findDoneByType(CalendarCoursesEventType coursesEventType);

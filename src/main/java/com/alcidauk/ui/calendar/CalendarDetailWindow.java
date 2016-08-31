@@ -1,7 +1,7 @@
 package com.alcidauk.ui.calendar;
 
 import com.alcidauk.data.bean.WorkSession;
-import com.alcidauk.data.repository.CalendarCoursesEventRepository;
+import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.ui.CoursesUI;
 import com.alcidauk.ui.dto.CalendarCoursesEventBean;
 import com.vaadin.data.Property;
@@ -21,16 +21,16 @@ public class CalendarDetailWindow extends Window {
 
     private CalendarCoursesEventBean calendarCoursesEventBean;
 
-    private CalendarCoursesEventRepository coursesEventRepository;
+    private WorkSessionRepository workSessionRepository;
 
     private CheckBox doneCheck;
     private TextArea descriptionTxt;
 
     private FieldGroup calendarEventFieldGroup;
 
-    public CalendarDetailWindow(CalendarCoursesEventRepository coursesEventRepository, CalendarCoursesEventBean calendarCoursesEventBean) {
+    public CalendarDetailWindow(WorkSessionRepository workSessionRepository, CalendarCoursesEventBean calendarCoursesEventBean) {
         this.calendarCoursesEventBean = calendarCoursesEventBean;
-        this.coursesEventRepository = coursesEventRepository;
+        this.workSessionRepository = workSessionRepository;
     }
 
     public void init(){
@@ -54,7 +54,7 @@ public class CalendarDetailWindow extends Window {
             } catch (FieldGroup.CommitException e) {
                 Notification.show("error");
             }
-            coursesEventRepository.save(calendarCoursesEventBean.getWorkSession());
+            workSessionRepository.save(calendarCoursesEventBean.getWorkSession());
         });
 
         subContent.addComponent(doneCheck);

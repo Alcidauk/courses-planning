@@ -1,7 +1,7 @@
 package com.alcidauk.ui;
 
 import com.alcidauk.data.bean.CalendarCoursesEventType;
-import com.alcidauk.data.repository.CalendarCoursesEventRepository;
+import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.data.repository.CalendarCoursesEventTypeRepository;
 import com.alcidauk.data.repository.DefaultSessionRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
@@ -34,7 +34,7 @@ public class HomeLayout extends VerticalLayout {
     private VerticalLayout rightLayout;
 
     @Autowired
-    private CalendarCoursesEventRepository coursesEventRepository;
+    private WorkSessionRepository workSessionRepository;
 
     @Autowired
     private CalendarCoursesEventTypeRepository coursesEventTypeRepository;
@@ -67,7 +67,7 @@ public class HomeLayout extends VerticalLayout {
 
         List<CalendarCoursesEventType> calendarCoursesEventTypes = coursesEventTypeRepository.findAll();
         for(CalendarCoursesEventType calendarCoursesEventType : calendarCoursesEventTypes){
-            CalendarTypeLayout calendarTypeLayout = new CalendarTypeLayout(coursesEventRepository, calendarCoursesEventType);
+            CalendarTypeLayout calendarTypeLayout = new CalendarTypeLayout(workSessionRepository, calendarCoursesEventType);
             calendarTypeLayout.init();
 
             calendarTypeLayout.setWidth(100, Unit.PERCENTAGE);
@@ -102,7 +102,7 @@ public class HomeLayout extends VerticalLayout {
         calendar.setHandler(new CalendarComponentEvents.EventClickHandler() {
             public void eventClick(CalendarComponentEvents.EventClick event) {
                 CalendarDetailWindow calendarDetailWindow =
-                        new CalendarDetailWindow(coursesEventRepository, (CalendarCoursesEventBean) event.getCalendarEvent());
+                        new CalendarDetailWindow(workSessionRepository, (CalendarCoursesEventBean) event.getCalendarEvent());
                 calendarDetailWindow.init();
 
                 UI.getCurrent().addWindow(calendarDetailWindow);
@@ -110,7 +110,7 @@ public class HomeLayout extends VerticalLayout {
             }
         });
 
-        calendar.setEventProvider(new CalendarCoursesEventProvider(coursesEventRepository));
+        calendar.setEventProvider(new CalendarCoursesEventProvider(workSessionRepository));
 
         calendar.setHeight(100, Unit.PERCENTAGE);
         calendar.addStyleName("calendar");
