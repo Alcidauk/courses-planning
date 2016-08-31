@@ -1,30 +1,22 @@
 package com.alcidauk.ui;
 
-import com.alcidauk.data.bean.User;
 import com.alcidauk.data.repository.UserRepository;
 import com.alcidauk.login.AccessControl;
-import com.alcidauk.login.BasicAccessControl;
 import com.alcidauk.ui.calendar.CalendarCoursesEventTypeListener;
 import com.ejt.vaadin.loginform.DefaultVerticalLoginForm;
 import com.ejt.vaadin.loginform.LoginForm;
 import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.servlet.annotation.WebServlet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by alcidauk on 20/08/16.
@@ -47,6 +39,8 @@ public class CoursesUI extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+        UI.getCurrent().setLocale(Locale.FRANCE);
+
         calendarCoursesEventTypeListeners = new ArrayList<>();
 
         if (!accessControl.isUserSignedIn()) {

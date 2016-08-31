@@ -1,6 +1,7 @@
 package com.alcidauk.ui;
 
 import com.alcidauk.data.bean.PlanningPeriod;
+import com.alcidauk.data.bean.PlanningPeriodEventType;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
 import com.vaadin.ui.*;
 import org.apache.commons.lang3.StringUtils;
@@ -36,21 +37,26 @@ public class ChooseHoursWindow extends Window {
     public void init(){
         mainLayout = new VerticalLayout();
 
-        List<PlanningPeriod> planningPeriods = planningPeriodRepository.findByStartInstantAndEndInstant(startInstant, endInstant);
+        PlanningPeriod planningPeriod = planningPeriodRepository.findByStartInstantAndEndInstant(startInstant, endInstant);
 
-        if(planningPeriods == null || planningPeriods.isEmpty()){
+        if(planningPeriod == null){
             log.error(String.format("Error retrieving planning for dates %s to %s.", startInstant.toString(), endInstant.toString()));
         } else {
-            for (PlanningPeriod planningPeriod : planningPeriods) {
-                FormLayout parameterForm = new FormLayout();
-                parameterForm.setCaption(StringUtils.capitalize(planningPeriod.getType().getName()));
+            List<PlanningPeriodEventType> planningPeriodEventTypes = planningPeriod.getPlanningPeriodEventTypeList();
+            if(planningPeriodEventTypes == null || planningPeriodEventTypes.isEmpty()){
+                log.error(String.format("No plannified hours found for %s to %s planning.", startInstant.toString(), endInstant.toString()));
+            } else {
+                for (PlanningPeriodEventType planningPeriodEventType : planningPeriodEventTypes) {
+                    FormLayout parameterForm = new FormLayout();
+                    parameterForm.setCaption(StringUtils.capitalize(planningPeriodEventType.getType().getName()));
 
-                TextField duration = new TextField("Nombre d'heures");
-                duration.setValue(String.valueOf(planningPeriod.getPeriodDuration().toHours()));
+                    TextField duration = new TextField("Nombre d'heures");
+                    duration.setValue(String.valueOf(planningPeriodEventType.getPeriodDuration().toHours()));
 
-                parameterForm.addComponent(duration);
+                    parameterForm.addComponent(duration);
 
-                mainLayout.addComponent(parameterForm);
+                    mainLayout.addComponent(parameterForm);
+                }
             }
         }
 

@@ -1,13 +1,7 @@
 package com.alcidauk.app;
 
-import com.alcidauk.data.bean.CalendarCoursesEvent;
-import com.alcidauk.data.bean.CalendarCoursesEventType;
-import com.alcidauk.data.bean.PlanningPeriod;
-import com.alcidauk.data.bean.User;
-import com.alcidauk.data.repository.CalendarCoursesEventRepository;
-import com.alcidauk.data.repository.CalendarCoursesEventTypeRepository;
-import com.alcidauk.data.repository.PlanningPeriodRepository;
-import com.alcidauk.data.repository.UserRepository;
+import com.alcidauk.data.bean.*;
+import com.alcidauk.data.repository.*;
 import com.alcidauk.login.AccessControl;
 import com.alcidauk.login.BasicAccessControl;
 import org.slf4j.Logger;
@@ -23,7 +17,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @SpringBootApplication
 @EnableJpaRepositories("com.alcidauk.data.repository")
@@ -39,7 +35,8 @@ public class CoursesSpringApplication {
 
 	@Bean
 	public CommandLineRunner loadData(UserRepository repository, CalendarCoursesEventRepository coursesRepo,
-									  CalendarCoursesEventTypeRepository coursesTypeRepo, PlanningPeriodRepository planningPeriodRepository) {
+									  CalendarCoursesEventTypeRepository coursesTypeRepo, PlanningPeriodRepository planningPeriodRepository,
+									  PlanningPeriodEventTypeRepository periodEventTypeRepository, DefaultSessionRepository defaultSessionRepository) {
 		return (args) -> {
 			// save a couple of customers
 			repository.save(new User("Titine", "Totot"));
@@ -54,14 +51,25 @@ public class CoursesSpringApplication {
 			coursesRepo.save(new CalendarCoursesEvent(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), diploma, true));
 			coursesRepo.save(new CalendarCoursesEvent(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), available, true));
 
+
+			PlanningPeriodEventType coursesPeriod = new PlanningPeriodEventType(Duration.ofHours(10), classes);
+			PlanningPeriodEventType concoursPeriod = new PlanningPeriodEventType(Duration.ofHours(15), diploma);
+			periodEventTypeRepository.save(coursesPeriod);
+			periodEventTypeRepository.save(concoursPeriod);
+
+			List<PlanningPeriodEventType> planningPeriodEventTypes = new ArrayList<>();
+			planningPeriodEventTypes.add(coursesPeriod);
+			planningPeriodEventTypes.add(concoursPeriod);
+
 			planningPeriodRepository.save(new PlanningPeriod(getInstantFromStringDateWithSeconds("29/08/2016 00:00:00"),
 					getInstantFromStringDateWithSeconds("04/09/2016 23:59:59"),
-					Duration.ofHours(10),
-					classes));
-			planningPeriodRepository.save(new PlanningPeriod(getInstantFromStringDateWithSeconds("29/08/2016 00:00:00"),
-					getInstantFromStringDateWithSeconds("04/09/2016 23:59:59"),
-					Duration.ofHours(5),
-					diploma));
+					planningPeriodEventTypes, false)
+			);
+
+			defaultSessionRepository.save(new DefaultSession(1, 7, Duration.ofHours(3)));
+			defaultSessionRepository.save(new DefaultSession(1, 18, Duration.ofHours(2)));
+			defaultSessionRepository.save(new DefaultSession(2, 7, Duration.ofHours(3)));
+			defaultSessionRepository.save(new DefaultSession(2, 18, Duration.ofHours(3)));
 		};
 	}
 

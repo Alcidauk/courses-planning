@@ -2,8 +2,8 @@ package com.alcidauk.data.bean;
 
 
 import javax.persistence.*;
-import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 /**
  * Created by alcidauk on 20/08/16.
@@ -19,19 +19,19 @@ public class PlanningPeriod {
 
     private Instant endInstant;
 
-    private Duration periodDuration;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<PlanningPeriodEventType> planningPeriodEventTypeList;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private CalendarCoursesEventType type;
+    private boolean defaultSessionsGenerated;
 
     public PlanningPeriod() {
     }
 
-    public PlanningPeriod(Instant startInstant, Instant endInstant, Duration periodDuration, CalendarCoursesEventType type) {
+    public PlanningPeriod(Instant startInstant, Instant endInstant, List<PlanningPeriodEventType> planningPeriodEventTypeList, boolean defaultGenerated) {
         this.startInstant = startInstant;
         this.endInstant = endInstant;
-        this.periodDuration = periodDuration;
-        this.type = type;
+        this.planningPeriodEventTypeList = planningPeriodEventTypeList;
+        this.defaultSessionsGenerated = defaultGenerated;
     }
 
     public Long getId() {
@@ -58,19 +58,19 @@ public class PlanningPeriod {
         this.endInstant = endInstant;
     }
 
-    public Duration getPeriodDuration() {
-        return periodDuration;
+    public List<PlanningPeriodEventType> getPlanningPeriodEventTypeList() {
+        return planningPeriodEventTypeList;
     }
 
-    public void setPeriodDuration(Duration periodDuration) {
-        this.periodDuration = periodDuration;
+    public void setPlanningPeriodEventTypeList(List<PlanningPeriodEventType> planningPeriodEventTypeList) {
+        this.planningPeriodEventTypeList = planningPeriodEventTypeList;
     }
 
-    public CalendarCoursesEventType getType() {
-        return type;
+    public boolean isDefaultSessionsGenerated() {
+        return defaultSessionsGenerated;
     }
 
-    public void setType(CalendarCoursesEventType type) {
-        this.type = type;
+    public void setDefaultSessionsGenerated(boolean defaultSessionsGenerated) {
+        this.defaultSessionsGenerated = defaultSessionsGenerated;
     }
 }

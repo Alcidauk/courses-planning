@@ -3,6 +3,7 @@ package com.alcidauk.ui;
 import com.alcidauk.data.bean.CalendarCoursesEventType;
 import com.alcidauk.data.repository.CalendarCoursesEventRepository;
 import com.alcidauk.data.repository.CalendarCoursesEventTypeRepository;
+import com.alcidauk.data.repository.DefaultSessionRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
 import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.calendar.CalendarCoursesEventProvider;
@@ -40,6 +41,9 @@ public class HomeLayout extends VerticalLayout {
 
     @Autowired
     private PlanningPeriodRepository planningPeriodRepository;
+
+    @Autowired
+    private DefaultSessionRepository defaultSessionRepository;
 
     protected void init() {
         this.createTopbar();
@@ -85,21 +89,7 @@ public class HomeLayout extends VerticalLayout {
         });
         chooseHoursButton.setWidth(100, Unit.PERCENTAGE);
 
-        Button periodPlanning = new Button("Choisir le planning de travail");
-        periodPlanning.addClickListener((Button.ClickListener) clickEvent -> {
-            PeriodWindow window = new PeriodWindow(Instant.ofEpochMilli(calendar.getStartDate().getTime()),
-                    Instant.ofEpochMilli(calendar.getEndDate().getTime()),
-                    coursesEventRepository, coursesEventTypeRepository);
-
-            window.init();
-
-            UI.getCurrent().addWindow(window);
-            window.center();
-        });
-        periodPlanning.setWidth(100, Unit.PERCENTAGE);
-
         rightLayout.addComponent(chooseHoursButton);
-        rightLayout.addComponent(periodPlanning);
         rightLayout.setMargin(true);
     }
 
@@ -137,7 +127,18 @@ public class HomeLayout extends VerticalLayout {
         logoutBtn.setWidth(150, Unit.PIXELS);
         logoutBtn.addClickListener(this::logout);
 
-        this.topbar = new HorizontalLayout(nameLabel, logoutBtn);
+        Button periodPlanning = new Button("Modifier les disponibilités par défaut");
+        periodPlanning.addClickListener((Button.ClickListener) clickEvent -> {
+            PeriodWindow window = new PeriodWindow(defaultSessionRepository);
+
+            window.init();
+
+            UI.getCurrent().addWindow(window);
+            window.center();
+        });
+        periodPlanning.setWidth(250, Unit.PIXELS);
+
+        this.topbar = new HorizontalLayout(nameLabel, periodPlanning, logoutBtn);
         this.topbar.addStyleName("topbar");
         this.topbar.setHeight(50, Unit.PIXELS);
         this.topbar.setWidth(100, Unit.PERCENTAGE);
