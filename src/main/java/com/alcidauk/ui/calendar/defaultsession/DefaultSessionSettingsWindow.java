@@ -36,8 +36,8 @@ public class DefaultSessionSettingsWindow extends Window {
     public void init(){
         calendar = new Calendar();
         calendar.setLocale(Locale.FRENCH);
-        calendar.setFirstVisibleHourOfDay(6);
-        calendar.setLastVisibleHourOfDay(21);
+        calendar.setFirstVisibleHourOfDay(0);
+        calendar.setLastVisibleHourOfDay(24);
 
         // set empty string to avoid showing date, except day of week
         calendar.setWeeklyCaptionFormat("");
