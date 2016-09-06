@@ -33,4 +33,9 @@ public class DefaultSessionsEventProvider implements CalendarEventProvider {
         return sessions.stream().map(session ->
                 new DefaultSessionCalendarBean(session, startDate)).collect(Collectors.toList());
     }
+
+    public void updateSessionBean(DefaultSessionCalendarBean calendarBean){
+        calendarBean.updateDefaultSession();
+        defaultSessionRepository.save(calendarBean.getDefaultSession());
+    }
 }
