@@ -66,10 +66,10 @@ public class CoursesSpringApplication {
 					planningPeriodEventTypes, false)
 			);
 
-			defaultSessionRepository.save(new DefaultSession(1, 7, Duration.ofHours(3)));
-			defaultSessionRepository.save(new DefaultSession(1, 18, Duration.ofHours(2)));
-			defaultSessionRepository.save(new DefaultSession(2, 7, Duration.ofHours(3)));
-			defaultSessionRepository.save(new DefaultSession(2, 18, Duration.ofHours(3)));
+			defaultSessionRepository.save(new DefaultUnavailabilitySession(1, 7, Duration.ofHours(3)));
+			defaultSessionRepository.save(new DefaultUnavailabilitySession(1, 18, Duration.ofHours(2)));
+			defaultSessionRepository.save(new DefaultUnavailabilitySession(2, 7, Duration.ofHours(3)));
+			defaultSessionRepository.save(new DefaultUnavailabilitySession(2, 18, Duration.ofHours(3)));
 		};
 	}
 

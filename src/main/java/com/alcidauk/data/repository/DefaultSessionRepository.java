@@ -1,6 +1,6 @@
 package com.alcidauk.data.repository;
 
-import com.alcidauk.data.bean.DefaultSession;
+import com.alcidauk.data.bean.DefaultUnavailabilitySession;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 @SpringComponent
 @UIScope
-public interface DefaultSessionRepository extends JpaRepository<DefaultSession, Long> {
+public interface DefaultSessionRepository extends JpaRepository<DefaultUnavailabilitySession, Long> {
 
 
 }

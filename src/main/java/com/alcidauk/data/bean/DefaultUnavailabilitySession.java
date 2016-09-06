@@ -10,7 +10,7 @@ import java.time.Duration;
  * Created by alcidauk on 20/08/16.
  */
 @Entity
-public class DefaultSession {
+public class DefaultUnavailabilitySession {
 
     @Id
     @GeneratedValue
@@ -22,10 +22,10 @@ public class DefaultSession {
 
     private Duration duration;
 
-    public DefaultSession() {
+    public DefaultUnavailabilitySession() {
     }
 
-    public DefaultSession(int dayOfWeek, int startHour, Duration duration) {
+    public DefaultUnavailabilitySession(int dayOfWeek, int startHour, Duration duration) {
         this.dayOfWeek = dayOfWeek;
         this.startHour = startHour;
         this.duration = duration;
