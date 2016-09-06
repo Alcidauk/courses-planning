@@ -1,4 +1,4 @@
-package com.alcidauk.ui.calendar;
+package com.alcidauk.ui.calendar.worksession;
 
 import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.repository.WorkSessionRepository;

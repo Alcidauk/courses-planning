@@ -1,9 +1,8 @@
-package com.alcidauk.ui;
+package com.alcidauk.ui.calendar.defaultsession;
 
 import com.alcidauk.data.repository.DefaultSessionRepository;
-import com.alcidauk.ui.calendar.DefaultSessionEventMoveHandler;
-import com.alcidauk.ui.calendar.DefaultSessionEventResizeHandler;
-import com.alcidauk.ui.calendar.DefaultSessionsEventProvider;
+import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventMoveHandler;
+import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventResizeHandler;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;

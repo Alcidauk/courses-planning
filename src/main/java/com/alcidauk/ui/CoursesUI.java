@@ -2,7 +2,7 @@ package com.alcidauk.ui;
 
 import com.alcidauk.data.repository.UserRepository;
 import com.alcidauk.login.AccessControl;
-import com.alcidauk.ui.calendar.WorkSessionTypeListener;
+import com.alcidauk.ui.calendar.worksession.WorkSessionTypeListener;
 import com.ejt.vaadin.loginform.DefaultVerticalLoginForm;
 import com.ejt.vaadin.loginform.LoginForm;
 import com.vaadin.annotations.Theme;

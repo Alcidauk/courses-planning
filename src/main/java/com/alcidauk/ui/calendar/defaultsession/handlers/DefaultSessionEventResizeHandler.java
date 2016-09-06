@@ -1,5 +1,6 @@
-package com.alcidauk.ui.calendar;
+package com.alcidauk.ui.calendar.defaultsession.handlers;
 
+import com.alcidauk.ui.calendar.defaultsession.DefaultSessionsEventProvider;
 import com.alcidauk.ui.dto.DefaultSessionCalendarBean;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents;

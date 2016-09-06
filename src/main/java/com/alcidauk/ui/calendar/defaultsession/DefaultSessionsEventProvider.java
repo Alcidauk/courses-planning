@@ -1,4 +1,4 @@
-package com.alcidauk.ui.calendar;
+package com.alcidauk.ui.calendar.defaultsession;
 
 import com.alcidauk.data.bean.DefaultSession;
 import com.alcidauk.data.repository.DefaultSessionRepository;
