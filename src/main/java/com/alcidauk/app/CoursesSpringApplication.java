@@ -36,7 +36,7 @@ public class CoursesSpringApplication {
 	@Bean
 	public CommandLineRunner loadData(UserRepository repository, WorkSessionRepository workSessionRepository,
 									  WorkSessionTypeRepository coursesTypeRepo, PlanningPeriodRepository planningPeriodRepository,
-									  PlanningPeriodEventTypeRepository periodEventTypeRepository, DefaultSessionRepository defaultSessionRepository) {
+									  PlanningPeriodEventTypeRepository periodEventTypeRepository, DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository) {
 		return (args) -> {
 			// save a couple of customers
 			repository.save(new User("Titine", "Totot"));
@@ -66,10 +66,10 @@ public class CoursesSpringApplication {
 					planningPeriodEventTypes, false)
 			);
 
-			defaultSessionRepository.save(new DefaultUnavailabilitySession(1, 7, Duration.ofHours(3)));
-			defaultSessionRepository.save(new DefaultUnavailabilitySession(1, 18, Duration.ofHours(2)));
-			defaultSessionRepository.save(new DefaultUnavailabilitySession(2, 7, Duration.ofHours(3)));
-			defaultSessionRepository.save(new DefaultUnavailabilitySession(2, 18, Duration.ofHours(3)));
+			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(1, 7, Duration.ofHours(3)));
+			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(1, 18, Duration.ofHours(2)));
+			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(2, 7, Duration.ofHours(3)));
+			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(2, 18, Duration.ofHours(3)));
 		};
 	}
 

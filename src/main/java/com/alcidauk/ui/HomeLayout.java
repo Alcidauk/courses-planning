@@ -3,7 +3,7 @@ package com.alcidauk.ui;
 import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.data.repository.WorkSessionTypeRepository;
-import com.alcidauk.data.repository.DefaultSessionRepository;
+import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
 import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.calendar.defaultsession.DefaultSessionSettingsWindow;
@@ -44,7 +44,7 @@ public class HomeLayout extends VerticalLayout {
     private PlanningPeriodRepository planningPeriodRepository;
 
     @Autowired
-    private DefaultSessionRepository defaultSessionRepository;
+    private DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository;
 
     protected void init() {
         this.createTopbar();
@@ -130,7 +130,7 @@ public class HomeLayout extends VerticalLayout {
 
         Button periodPlanning = new Button("Modifier les disponibilités par défaut");
         periodPlanning.addClickListener((Button.ClickListener) clickEvent -> {
-            DefaultSessionSettingsWindow window = new DefaultSessionSettingsWindow(defaultSessionRepository);
+            DefaultSessionSettingsWindow window = new DefaultSessionSettingsWindow(defaultUnavailabilitySessionRepository);
 
             window.init();
 

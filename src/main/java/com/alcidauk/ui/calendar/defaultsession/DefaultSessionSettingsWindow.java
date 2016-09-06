@@ -1,6 +1,6 @@
 package com.alcidauk.ui.calendar.defaultsession;
 
-import com.alcidauk.data.repository.DefaultSessionRepository;
+import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
 import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventMoveHandler;
 import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventResizeHandler;
 import com.vaadin.ui.Calendar;
@@ -23,14 +23,14 @@ public class DefaultSessionSettingsWindow extends Window {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultSessionSettingsWindow.class);
 
-    private DefaultSessionRepository defaultSessionRepository;
+    private DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository;
 
     private VerticalLayout mainLayout;
 
     private Calendar calendar;
 
-    public DefaultSessionSettingsWindow(DefaultSessionRepository defaultSessionRepository) {
-        this.defaultSessionRepository = defaultSessionRepository;
+    public DefaultSessionSettingsWindow(DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository) {
+        this.defaultUnavailabilitySessionRepository = defaultUnavailabilitySessionRepository;
     }
 
     public void init(){
@@ -42,7 +42,7 @@ public class DefaultSessionSettingsWindow extends Window {
         // set empty string to avoid showing date, except day of week
         calendar.setWeeklyCaptionFormat("");
 
-        DefaultSessionsEventProvider calendarProvider = new DefaultSessionsEventProvider(defaultSessionRepository, calendar.getStartDate());
+        DefaultSessionsEventProvider calendarProvider = new DefaultSessionsEventProvider(defaultUnavailabilitySessionRepository, calendar.getStartDate());
         calendar.setEventProvider(calendarProvider);
 
         calendar.setHandler(new DefaultSessionEventMoveHandler());

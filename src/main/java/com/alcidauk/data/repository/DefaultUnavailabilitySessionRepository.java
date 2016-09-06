@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 @SpringComponent
 @UIScope
-public interface DefaultSessionRepository extends JpaRepository<DefaultUnavailabilitySession, Long> {
+public interface DefaultUnavailabilitySessionRepository extends JpaRepository<DefaultUnavailabilitySession, Long> {
 
 
 }

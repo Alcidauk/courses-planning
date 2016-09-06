@@ -3,7 +3,7 @@ package com.alcidauk.ui.calendar.worksession;
 import com.alcidauk.data.bean.DefaultUnavailabilitySession;
 import com.alcidauk.data.bean.PlanningPeriod;
 import com.alcidauk.data.bean.WorkSession;
-import com.alcidauk.data.repository.DefaultSessionRepository;
+import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
 import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.ui.dto.WorkSessionCalendarEventBean;
@@ -23,16 +23,16 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
 
     private WorkSessionRepository workSessionRepository;
     private PlanningPeriodRepository planningPeriodRepository;
-    private DefaultSessionRepository defaultSessionRepository;
+    private DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository;
 
     private static final Logger log = LoggerFactory.getLogger(WorkSessionCalendarEventProvider.class);
 
     public WorkSessionCalendarEventProvider(WorkSessionRepository workSessionRepository,
                                             PlanningPeriodRepository planningPeriodRepository,
-                                            DefaultSessionRepository defaultSessionRepository) {
+                                            DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository) {
         this.workSessionRepository = workSessionRepository;
         this.planningPeriodRepository = planningPeriodRepository;
-        this.defaultSessionRepository = defaultSessionRepository;
+        this.defaultUnavailabilitySessionRepository = defaultUnavailabilitySessionRepository;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
     }
 
     private void generateDefaultSessionsAsEvents() {
-        List<DefaultUnavailabilitySession> defaultUnavailabilitySessions = defaultSessionRepository.findAll();
+        List<DefaultUnavailabilitySession> defaultUnavailabilitySessions = defaultUnavailabilitySessionRepository.findAll();
         for(DefaultUnavailabilitySession defaultUnavailabilitySession : defaultUnavailabilitySessions){
             WorkSession workSession = new WorkSession(null, null, null, false);
         }
