@@ -44,12 +44,13 @@ public class CoursesSpringApplication {
 
 			WorkSessionType classes = new WorkSessionType("cours");
 			WorkSessionType diploma = new WorkSessionType("concours");
-			WorkSessionType available = new WorkSessionType("Disponible");
-			coursesTypeRepo.save(Arrays.asList(classes, diploma, available));
+			WorkSessionType unavailable = new WorkSessionType("unavailable");
+			coursesTypeRepo.save(Arrays.asList(classes, diploma, unavailable));
 
 			workSessionRepository.save(new WorkSession(getInstantFromStringDate("22/08/2016 05:00"), getInstantFromStringDate("22/08/2016 08:00"), classes, true));
 			workSessionRepository.save(new WorkSession(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), diploma, true));
-			workSessionRepository.save(new WorkSession(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), available, true));
+			workSessionRepository.save(new WorkSession(getInstantFromStringDate("24/08/2016 00:00"), getInstantFromStringDate("24/08/2016 07:00"), unavailable, true));
+			workSessionRepository.save(new WorkSession(getInstantFromStringDate("24/08/2016 21:00"), getInstantFromStringDate("25/08/2016 00:00"), unavailable, true));
 
 
 			PlanningPeriodEventType coursesPeriod = new PlanningPeriodEventType(Duration.ofHours(10), classes);
