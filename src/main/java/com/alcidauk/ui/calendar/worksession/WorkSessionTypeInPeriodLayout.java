@@ -1,5 +1,6 @@
 package com.alcidauk.ui.calendar.worksession;
 
+import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.ui.CoursesUI;
@@ -7,24 +8,21 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
+import java.util.List;
 
 /**
  * Created by alcidauk on 23/08/16.
  */
 public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements WorkSessionTypeListener {
 
-    private static final Logger log = LoggerFactory.getLogger(WorkSessionTypeInPeriodLayout.class);
-
-
     private WorkSessionType workSessionType;
     private WorkSessionRepository workSessionRepository;
 
     private Label calendarTypeLabel;
 
-    private Label doneEvents;
-    private Label leftEvents;
+    private Label hoursEvents;
 
     public WorkSessionTypeInPeriodLayout(WorkSessionRepository workSessionRepository, WorkSessionType workSessionType) {
         this.workSessionType = workSessionType;
@@ -35,14 +33,11 @@ public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements Wor
         calendarTypeLabel = new Label(StringUtils.capitalize(workSessionType.getName()) + " : ");
         calendarTypeLabel.addStyleName("bold-font");
 
-        doneEvents = new Label(getDoneTextValue());
-        leftEvents = new Label(getLeftTextValue());
-        doneEvents.setImmediate(true);
-        leftEvents.setImmediate(true);
+        hoursEvents = new Label(getHoursEventValue());
+        hoursEvents.setImmediate(true);
 
         this.addComponent(calendarTypeLabel);
-        this.addComponent(doneEvents);
-        this.addComponent(leftEvents);
+        this.addComponent(hoursEvents);
 
         this.setMargin(true);
         this.setImmediate(true);
@@ -50,12 +45,27 @@ public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements Wor
         ((CoursesUI) UI.getCurrent()).addCalendarCoursesEventTypeListeners(this);
     }
 
-    private String getLeftTextValue() {
-        return "Session(s) restante(s) " + workSessionRepository.findLeftByType(workSessionType).size();
+    private String getHoursEventValue() {
+        return String.format("Effectuées / Restantes / Plannifiées : %d / %d / %d", getLeftHoursValue(), getDoneHoursValue(), 0);
     }
 
-    private String getDoneTextValue() {
-        return "Session(s) réalisée(s) " + workSessionRepository.findDoneByType(workSessionType).size();
+    private long getLeftHoursValue() {
+        List<WorkSession> workSessions = workSessionRepository.findLeftByType(workSessionType);
+        return countHoursInSessionList(workSessions);
+    }
+
+    private long getDoneHoursValue() {
+        List<WorkSession> workSessions = workSessionRepository.findDoneByType(workSessionType);
+        return countHoursInSessionList(workSessions);
+    }
+
+    private long countHoursInSessionList(List<WorkSession> workSessions) {
+        long hours = 0;
+
+        for(WorkSession workSession : workSessions){
+            hours += Duration.between(workSession.getStartInstant(), workSession.getEndInstant()).toHours();
+        }
+        return hours;
     }
 
     @Override
@@ -67,9 +77,7 @@ public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements Wor
     }
 
     private void updateLabels() {
-       doneEvents.setValue(getDoneTextValue());
-       leftEvents.setValue(getLeftTextValue());
-
+        hoursEvents.setValue(getHoursEventValue());
         this.markAsDirty();
     }
 }
