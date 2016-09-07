@@ -1,5 +1,6 @@
 package com.alcidauk.ui.calendar.worksession;
 
+import com.alcidauk.data.bean.PlanningPeriod;
 import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.WorkSessionRepository;
@@ -15,10 +16,12 @@ import java.util.List;
 /**
  * Created by alcidauk on 23/08/16.
  */
-public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements WorkSessionTypeListener {
+public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements WorkSessionTypeListener, ShownPlanningPeriodListener {
 
     private WorkSessionType workSessionType;
     private WorkSessionRepository workSessionRepository;
+
+    private PlanningPeriod planningPeriod;
 
     private Label calendarTypeLabel;
 
@@ -33,7 +36,7 @@ public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements Wor
         calendarTypeLabel = new Label(StringUtils.capitalize(workSessionType.getName()) + " : ");
         calendarTypeLabel.addStyleName("bold-font");
 
-        hoursEvents = new Label(getHoursEventValue());
+        hoursEvents = new Label();
         hoursEvents.setImmediate(true);
 
         this.addComponent(calendarTypeLabel);
@@ -43,6 +46,7 @@ public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements Wor
         this.setImmediate(true);
 
         ((CoursesUI) UI.getCurrent()).addCalendarCoursesEventTypeListeners(this);
+        ((CoursesUI) UI.getCurrent()).addShownPlanningPeriodListeners(this);
     }
 
     private String getHoursEventValue() {
@@ -50,12 +54,14 @@ public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements Wor
     }
 
     private long getLeftHoursValue() {
-        List<WorkSession> workSessions = workSessionRepository.findLeftByType(workSessionType);
+        List<WorkSession> workSessions = workSessionRepository.findLeftBetweenStartInstantAndEndInstant(planningPeriod.getStartInstant(),
+                planningPeriod.getEndInstant(), workSessionType);
         return countHoursInSessionList(workSessions);
     }
 
     private long getDoneHoursValue() {
-        List<WorkSession> workSessions = workSessionRepository.findDoneByType(workSessionType);
+        List<WorkSession> workSessions = workSessionRepository.findDoneBetweenStartInstantAndEndInstant(planningPeriod.getStartInstant(),
+                planningPeriod.getEndInstant(), workSessionType);
         return countHoursInSessionList(workSessions);
     }
 
@@ -79,5 +85,11 @@ public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements Wor
     private void updateLabels() {
         hoursEvents.setValue(getHoursEventValue());
         this.markAsDirty();
+    }
+
+    @Override
+    public void update(ShowPlanningPeriodChangedEvent showPlanningPeriodChangedEvent) {
+        planningPeriod =  showPlanningPeriodChangedEvent.getPlanningPeriod();
+        updateLabels();
     }
 }

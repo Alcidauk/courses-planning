@@ -1,10 +1,15 @@
 package com.alcidauk.ui.calendar.worksession;
 
 import com.alcidauk.data.bean.*;
-import com.alcidauk.data.repository.*;
+import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
+import com.alcidauk.data.repository.PlanningPeriodRepository;
+import com.alcidauk.data.repository.WorkSessionRepository;
+import com.alcidauk.data.repository.WorkSessionTypeRepository;
+import com.alcidauk.ui.CoursesUI;
 import com.alcidauk.ui.calendar.CalendarUtils;
 import com.alcidauk.ui.dto.WorkSessionCalendarEventBean;
 import com.vaadin.ui.Calendar;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 import org.slf4j.Logger;
@@ -25,21 +30,27 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
     private PlanningPeriodRepository planningPeriodRepository;
     private DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository;
 
+    private Calendar calendar;
+
     private static final Logger log = LoggerFactory.getLogger(WorkSessionCalendarEventProvider.class);
+
+    private PlanningPeriod planningPeriod;
 
     public WorkSessionCalendarEventProvider(WorkSessionRepository workSessionRepository,
                                             PlanningPeriodRepository planningPeriodRepository,
                                             DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository,
-                                            WorkSessionTypeRepository workSessionTypeRepository) {
+                                            WorkSessionTypeRepository workSessionTypeRepository,
+                                            Calendar calendar) {
         this.workSessionRepository = workSessionRepository;
         this.workSessionTypeRepository = workSessionTypeRepository;
         this.planningPeriodRepository = planningPeriodRepository;
         this.defaultUnavailabilitySessionRepository = defaultUnavailabilitySessionRepository;
+        this.calendar = calendar;
     }
 
     @Override
     public List<CalendarEvent> getEvents(Date start, Date end) {
-        PlanningPeriod planningPeriod = planningPeriodRepository.findByStartInstantAndEndInstant(
+        planningPeriod = planningPeriodRepository.findByStartInstantAndEndInstant(
                 Instant.ofEpochSecond(start.toInstant().getEpochSecond()), Instant.ofEpochSecond(end.toInstant().getEpochSecond()));
 
         if(planningPeriod == null){
@@ -47,9 +58,12 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
             planningPeriod = createPlanningPeriod(Instant.ofEpochSecond(start.toInstant().getEpochSecond()),
                     Instant.ofEpochSecond(end.toInstant().getEpochSecond()));
         }
+        firePlanningPeriodChanged();
 
         if(!planningPeriod.isDefaultSessionsGenerated()){
-            generateDefaultSessionsAsEvents(start, workSessionTypeRepository.findByName("unavailable"));
+            WorkSessionType unavailableType = workSessionTypeRepository.findByName("unavailable");
+            generateDefaultSessionsAsEvents(start, unavailableType);
+            fireEventChanged(unavailableType);
             planningPeriod.setDefaultSessionsGenerated(true);
             planningPeriodRepository.save(planningPeriod);
         }
@@ -77,6 +91,18 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
                     defaultUnavailabilitySession.getStartHour(), defaultUnavailabilitySession.getDuration());
             WorkSession workSession = new WorkSession(sessionStart, sessionEnd, unavailableWorkSessionType, false);
             workSessionRepository.save(workSession);
+        }
+    }
+
+    private void firePlanningPeriodChanged() {
+        for(ShownPlanningPeriodListener listener :  ((CoursesUI) UI.getCurrent()).getShownPlanningPeriodChangedListeners()){
+            listener.update(new ShowPlanningPeriodChangedEvent(calendar, planningPeriod));
+        }
+    }
+
+    private void fireEventChanged(WorkSessionType unavailableType) {
+        for(WorkSessionTypeListener listener :  ((CoursesUI) UI.getCurrent()).getWorkSessionTypeListeners()){
+            listener.update(new WorkSessionTypeUpdatedEvent(calendar, unavailableType));
         }
     }
 }

@@ -48,7 +48,7 @@ public class WorkSessionCalendar extends Calendar {
         });
 
         setEventProvider(new WorkSessionCalendarEventProvider(workSessionRepository, planningPeriodRepository,
-                defaultUnavailabilitySessionRepository, workSessionTypeRepository));
+                defaultUnavailabilitySessionRepository, workSessionTypeRepository, this));
 
         setHeight(100, Unit.PERCENTAGE);
         addStyleName("calendar");

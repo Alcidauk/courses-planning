@@ -8,19 +8,14 @@ import com.alcidauk.data.repository.WorkSessionTypeRepository;
 import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.calendar.defaultsession.DefaultSessionSettingsWindow;
 import com.alcidauk.ui.calendar.worksession.WorkSessionCalendar;
-import com.alcidauk.ui.calendar.worksession.WorkSessionCalendarEventProvider;
-import com.alcidauk.ui.calendar.worksession.WorkSessionSettingsWindow;
 import com.alcidauk.ui.calendar.worksession.WorkSessionTypeInPeriodLayout;
-import com.alcidauk.ui.dto.WorkSessionCalendarEventBean;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by alcidauk on 22/08/16.
@@ -32,7 +27,9 @@ public class HomeLayout extends VerticalLayout {
     private HorizontalLayout topbar;
     private HorizontalLayout mainLayout;
 
+    @Autowired
     private WorkSessionCalendar calendar;
+
     private VerticalLayout rightLayout;
 
     @Autowired
@@ -69,7 +66,8 @@ public class HomeLayout extends VerticalLayout {
 
         List<WorkSessionType> workSessionTypes = workSessionTypeRepository.findAll();
         for(WorkSessionType workSessionType : workSessionTypes){
-            WorkSessionTypeInPeriodLayout workSessionTypeInPeriodLayout = new WorkSessionTypeInPeriodLayout(workSessionRepository, workSessionType);
+            WorkSessionTypeInPeriodLayout workSessionTypeInPeriodLayout =
+                    new WorkSessionTypeInPeriodLayout(workSessionRepository, workSessionType);
             workSessionTypeInPeriodLayout.init();
 
             workSessionTypeInPeriodLayout.setWidth(100, Unit.PERCENTAGE);
@@ -81,9 +79,7 @@ public class HomeLayout extends VerticalLayout {
         Button chooseHoursButton = new Button("Choisir les nombres d'heures");
         chooseHoursButton.addClickListener((Button.ClickListener) clickEvent -> {
             ChooseHoursWindow window = new ChooseHoursWindow(Instant.ofEpochMilli(calendar.getStartDate().getTime()),
-                    Instant.ofEpochMilli(calendar.getEndDate().getTime()),
-                    planningPeriodRepository);
-
+                    Instant.ofEpochMilli(calendar.getEndDate().getTime()), planningPeriodRepository);
             window.init();
 
             UI.getCurrent().addWindow(window);
@@ -96,7 +92,6 @@ public class HomeLayout extends VerticalLayout {
     }
 
     private void createCalendar() {
-        calendar = new WorkSessionCalendar();
         calendar.init();
     }
 

@@ -2,6 +2,7 @@ package com.alcidauk.ui;
 
 import com.alcidauk.data.repository.UserRepository;
 import com.alcidauk.login.AccessControl;
+import com.alcidauk.ui.calendar.worksession.ShownPlanningPeriodListener;
 import com.alcidauk.ui.calendar.worksession.WorkSessionTypeListener;
 import com.ejt.vaadin.loginform.DefaultVerticalLoginForm;
 import com.ejt.vaadin.loginform.LoginForm;
@@ -29,6 +30,7 @@ public class CoursesUI extends UI {
     private static final Logger log = LoggerFactory.getLogger(CoursesUI.class);
 
     private List<WorkSessionTypeListener> workSessionTypeListeners;
+    private List<ShownPlanningPeriodListener> shownPlanningPeriodListeners;
 
     @Autowired
     private UserRepository userRepository;
@@ -42,6 +44,7 @@ public class CoursesUI extends UI {
         UI.getCurrent().setLocale(Locale.FRANCE);
 
         workSessionTypeListeners = new ArrayList<>();
+        shownPlanningPeriodListeners = new ArrayList<>();
 
         if (!accessControl.isUserSignedIn()) {
             DefaultVerticalLoginForm loginForm = new DefaultVerticalLoginForm();
@@ -76,5 +79,13 @@ public class CoursesUI extends UI {
 
     public void addCalendarCoursesEventTypeListeners(WorkSessionTypeListener listener){
         workSessionTypeListeners.add(listener);
+    }
+
+    public List<ShownPlanningPeriodListener> getShownPlanningPeriodChangedListeners() {
+        return shownPlanningPeriodListeners;
+    }
+
+    public void addShownPlanningPeriodListeners(ShownPlanningPeriodListener listener){
+        shownPlanningPeriodListeners.add(listener);
     }
 }
