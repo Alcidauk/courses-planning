@@ -1,12 +1,13 @@
 package com.alcidauk.ui;
 
 import com.alcidauk.data.bean.WorkSessionType;
-import com.alcidauk.data.repository.WorkSessionRepository;
-import com.alcidauk.data.repository.WorkSessionTypeRepository;
 import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
+import com.alcidauk.data.repository.WorkSessionRepository;
+import com.alcidauk.data.repository.WorkSessionTypeRepository;
 import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.calendar.defaultsession.DefaultSessionSettingsWindow;
+import com.alcidauk.ui.calendar.worksession.WorkSessionCalendar;
 import com.alcidauk.ui.calendar.worksession.WorkSessionCalendarEventProvider;
 import com.alcidauk.ui.calendar.worksession.WorkSessionSettingsWindow;
 import com.alcidauk.ui.calendar.worksession.WorkSessionTypeInPeriodLayout;
@@ -31,7 +32,7 @@ public class HomeLayout extends VerticalLayout {
     private HorizontalLayout topbar;
     private HorizontalLayout mainLayout;
 
-    private Calendar calendar;
+    private WorkSessionCalendar calendar;
     private VerticalLayout rightLayout;
 
     @Autowired
@@ -95,27 +96,8 @@ public class HomeLayout extends VerticalLayout {
     }
 
     private void createCalendar() {
-        calendar = new Calendar();
-        calendar.setLocale(Locale.FRENCH);
-        calendar.setFirstVisibleHourOfDay(6);
-        calendar.setLastVisibleHourOfDay(21);
-
-        calendar.setHandler(new CalendarComponentEvents.EventClickHandler() {
-            public void eventClick(CalendarComponentEvents.EventClick event) {
-                WorkSessionSettingsWindow workSessionSettingsWindow =
-                        new WorkSessionSettingsWindow(workSessionRepository, (WorkSessionCalendarEventBean) event.getCalendarEvent());
-                workSessionSettingsWindow.init();
-
-                UI.getCurrent().addWindow(workSessionSettingsWindow);
-                workSessionSettingsWindow.center();
-            }
-        });
-
-        calendar.setEventProvider(new WorkSessionCalendarEventProvider(workSessionRepository, planningPeriodRepository,
-                defaultUnavailabilitySessionRepository, workSessionTypeRepository));
-
-        calendar.setHeight(100, Unit.PERCENTAGE);
-        calendar.addStyleName("calendar");
+        calendar = new WorkSessionCalendar();
+        calendar.init();
     }
 
     private void createTopbar(){
