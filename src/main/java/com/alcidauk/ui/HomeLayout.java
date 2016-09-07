@@ -111,7 +111,8 @@ public class HomeLayout extends VerticalLayout {
             }
         });
 
-        calendar.setEventProvider(new WorkSessionCalendarEventProvider(workSessionRepository, planningPeriodRepository));
+        calendar.setEventProvider(new WorkSessionCalendarEventProvider(workSessionRepository, planningPeriodRepository,
+                defaultUnavailabilitySessionRepository, workSessionTypeRepository));
 
         calendar.setHeight(100, Unit.PERCENTAGE);
         calendar.addStyleName("calendar");

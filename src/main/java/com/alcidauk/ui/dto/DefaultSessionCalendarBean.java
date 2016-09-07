@@ -1,6 +1,7 @@
 package com.alcidauk.ui.dto;
 
 import com.alcidauk.data.bean.DefaultUnavailabilitySession;
+import com.alcidauk.ui.calendar.CalendarUtils;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
@@ -29,25 +30,14 @@ public class DefaultSessionCalendarBean implements EditableCalendarEvent {
 
     @Override
     public Date getStart() {
-        Instant startInstant = startDate.toInstant();
-        ZonedDateTime zonedDate = startInstant.atZone(ZoneId.systemDefault());
-        zonedDate = zonedDate.with(WeekFields.of(UI.getCurrent().getLocale()).dayOfWeek(), defaultUnavailabilitySession.getDayOfWeek());
-        zonedDate = zonedDate.with(ChronoField.HOUR_OF_DAY, defaultUnavailabilitySession.getStartHour());
-
-        return Date.from(zonedDate.toInstant());
+        return Date.from(CalendarUtils.getDateInWeek(startDate, defaultUnavailabilitySession.getDayOfWeek(), defaultUnavailabilitySession.getStartHour()));
     }
 
     @Override
     public Date getEnd() {
-        Instant startInstant = startDate.toInstant();
-        ZonedDateTime zonedDate = startInstant.atZone(ZoneId.systemDefault());
-        zonedDate = zonedDate.with(WeekFields.of(UI.getCurrent().getLocale()).dayOfWeek(), defaultUnavailabilitySession.getDayOfWeek());
-        zonedDate = zonedDate.with(ChronoField.HOUR_OF_DAY, defaultUnavailabilitySession.getStartHour());
-        zonedDate = zonedDate.plus(defaultUnavailabilitySession.getDuration());
-
-        return Date.from(zonedDate.toInstant());
+        return Date.from(CalendarUtils.getDateInWeek(startDate, defaultUnavailabilitySession.getDayOfWeek(),
+                defaultUnavailabilitySession.getStartHour(), defaultUnavailabilitySession.getDuration()));
     }
-
 
     @Override
     public void setEnd(Date endDate) {
