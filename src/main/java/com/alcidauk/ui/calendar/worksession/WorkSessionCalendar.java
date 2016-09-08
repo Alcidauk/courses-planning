@@ -6,6 +6,7 @@ import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.data.repository.WorkSessionTypeRepository;
 import com.alcidauk.ui.dto.WorkSessionCalendarEventBean;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.VaadinSessionScope;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents;
@@ -17,6 +18,7 @@ import java.util.Locale;
  * Created by alcidauk on 07/09/16.
  */
 @SpringComponent
+@VaadinSessionScope
 public class WorkSessionCalendar extends Calendar {
 
     @Autowired
