@@ -66,6 +66,7 @@ public class DefaultSessionSettingsWindow extends Window {
         });
 
         calendar.addStyleName("calendar");
+        calendar.setSizeFull();
 
         mainLayout = new VerticalLayout();
 

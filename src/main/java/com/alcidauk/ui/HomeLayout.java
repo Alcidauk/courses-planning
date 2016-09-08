@@ -97,6 +97,7 @@ public class HomeLayout extends VerticalLayout {
 
     private void createTopbar(){
         Label nameLabel = new Label("Coucou, " + CurrentUser.get() + " !");
+        nameLabel.setHeight(100, Unit.PERCENTAGE);
         nameLabel.addStyleName("white-font");
         nameLabel.addStyleName("margin-5");
 
@@ -108,14 +109,25 @@ public class HomeLayout extends VerticalLayout {
             UI.getCurrent().addWindow(window);
             window.center();
         };
+        MenuBar.Command manageWorkSessionTypesCommand = (MenuBar.Command) selectedItem -> {
+            ManageWorkSessionTypesWindow window = new ManageWorkSessionTypesWindow(workSessionTypeRepository);
+
+            window.init();
+
+            UI.getCurrent().addWindow(window);
+            window.center();
+        };
         MenuBar.Command logoutCommand = (MenuBar.Command) menuItem -> logout();
 
         MenuBar buttonsMenu = new MenuBar();
+        buttonsMenu.addStyleName("margin-5");
 
         MenuBar.MenuItem settingsItem = buttonsMenu.addItem("Paramètres", null, null);
         settingsItem.addItem("Modifier les indisponibilités par défaut", defaultUnavailabilitySessionCommand);
+        settingsItem.addItem("Gérer les matières", manageWorkSessionTypesCommand);
 
-        buttonsMenu.addItem("Déconnexion", null, logoutCommand);
+        MenuBar.MenuItem logoutItem = buttonsMenu.addItem("Déconnexion", null, logoutCommand);
+        logoutItem.setStyleName("red-background");
 
         this.topbar = new HorizontalLayout(nameLabel, buttonsMenu);
         this.topbar.addStyleName("topbar");

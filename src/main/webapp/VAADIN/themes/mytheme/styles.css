@@ -12942,6 +12942,10 @@ div.v-layout.v-horizontal.v-widget {
 	background-color: rgba(120, 120, 120, 0.9);
 }
 
+.mytheme .red-background {
+	background-color: red;
+}
+
 .mytheme .white-font {
 	color: white;
 }
