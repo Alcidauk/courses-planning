@@ -100,31 +100,30 @@ public class HomeLayout extends VerticalLayout {
         nameLabel.addStyleName("white-font");
         nameLabel.addStyleName("margin-5");
 
-        Button logoutBtn = new Button("Déconnexion");
-        logoutBtn.addStyleName("margin-5");
-
-        logoutBtn.setWidth(150, Unit.PIXELS);
-        logoutBtn.addClickListener(this::logout);
-
-        Button periodPlanning = new Button("Modifier les disponibilités par défaut");
-        periodPlanning.addClickListener((Button.ClickListener) clickEvent -> {
+        MenuBar.Command defaultUnavailabilitySessionCommand = (MenuBar.Command) selectedItem -> {
             DefaultSessionSettingsWindow window = new DefaultSessionSettingsWindow(defaultUnavailabilitySessionRepository);
 
             window.init();
 
             UI.getCurrent().addWindow(window);
             window.center();
-        });
-        periodPlanning.setWidth(250, Unit.PIXELS);
+        };
+        MenuBar.Command logoutCommand = (MenuBar.Command) menuItem -> logout();
 
-        this.topbar = new HorizontalLayout(nameLabel, periodPlanning, logoutBtn);
+        MenuBar buttonsMenu = new MenuBar();
+
+        MenuBar.MenuItem settingsItem = buttonsMenu.addItem("Paramètres", null, null);
+        settingsItem.addItem("Modifier les indisponibilités par défaut", defaultUnavailabilitySessionCommand);
+
+        buttonsMenu.addItem("Déconnexion", null, logoutCommand);
+
+        this.topbar = new HorizontalLayout(nameLabel, buttonsMenu);
         this.topbar.addStyleName("topbar");
         this.topbar.setHeight(50, Unit.PIXELS);
         this.topbar.setWidth(100, Unit.PERCENTAGE);
 
         this.topbar.setExpandRatio(nameLabel, 1);
-        this.topbar.setComponentAlignment(nameLabel, Alignment.MIDDLE_LEFT);
-        this.topbar.setComponentAlignment(logoutBtn, Alignment.MIDDLE_LEFT);
+        this.topbar.setComponentAlignment(buttonsMenu, Alignment.MIDDLE_LEFT);
     }
 
     private void addMainComponents(){
@@ -135,7 +134,7 @@ public class HomeLayout extends VerticalLayout {
         this.setSizeFull();
     }
 
-    private void logout(Button.ClickEvent clickEvent) {
+    private void logout() {
         CurrentUser.set(null);
         getUI().getSession().close();
         getUI().getPage().reload();
