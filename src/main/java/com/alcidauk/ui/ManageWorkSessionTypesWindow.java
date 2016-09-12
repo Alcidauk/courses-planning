@@ -2,7 +2,6 @@ package com.alcidauk.ui;
 
 import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.WorkSessionTypeRepository;
-import com.vaadin.data.Container;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
@@ -34,6 +33,7 @@ public class ManageWorkSessionTypesWindow extends Window {
 
         workSessionTypesGrid.setContainerDataSource(beanItemContainer);
         workSessionTypesGrid.setEditorEnabled(true);
+        workSessionTypesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
         workSessionTypesGrid.setColumns("name");
         workSessionTypesGrid.getColumn("name").setHeaderCaption("Nom");
         workSessionTypesGrid.getColumn("name").setEditable(true);
@@ -54,17 +54,26 @@ public class ManageWorkSessionTypesWindow extends Window {
 
         Button newWorkSessionTypeButton = new Button("Ajouter une matière");
         newWorkSessionTypeButton.addStyleName("margin-5");
-        newWorkSessionTypeButton.addClickListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                WorkSessionType workSessionType = new WorkSessionType("Nouvelle matière");
-                workSessionTypeRepository.save(workSessionType);
-                beanItemContainer.addItem(workSessionType);
+        newWorkSessionTypeButton.addClickListener((Button.ClickListener) clickEvent -> {
+            WorkSessionType workSessionType = new WorkSessionType("Nouvelle matière");
+            workSessionTypeRepository.save(workSessionType);
+            beanItemContainer.addItem(workSessionType);
+        });
+
+        Button removeSelectedSessionTypeButton = new Button("Supprimer la matière sélectionnée");
+        removeSelectedSessionTypeButton.addStyleName("margin-5");
+        removeSelectedSessionTypeButton.addClickListener((Button.ClickListener) clickEvent -> {
+            Object selectedRow = workSessionTypesGrid.getSelectedRow();
+            if(selectedRow != null){
+                BeanItem<WorkSessionType> workSessionTypeBeanItem =
+                        (BeanItem<WorkSessionType>) workSessionTypesGrid.getContainerDataSource().getItem(selectedRow);
+                workSessionTypeRepository.delete(workSessionTypeBeanItem.getBean());
+                beanItemContainer.removeItem(workSessionTypeBeanItem);
             }
         });
 
         mainLayout.addComponent(workSessionTypesGrid);
-        mainLayout.addComponent(newWorkSessionTypeButton);
+        mainLayout.addComponent(new HorizontalLayout(newWorkSessionTypeButton, removeSelectedSessionTypeButton));
         setContent(mainLayout);
     }
 }
