@@ -19,12 +19,16 @@ public class PlanningPeriodEventType {
     @ManyToOne(fetch = FetchType.EAGER)
     private WorkSessionType type;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private PlanningPeriod period;
+
     public PlanningPeriodEventType() {
     }
 
-    public PlanningPeriodEventType(Duration periodDuration, WorkSessionType type) {
+    public PlanningPeriodEventType(Duration periodDuration, WorkSessionType type, PlanningPeriod period) {
         this.periodDuration = periodDuration;
         this.type = type;
+        this.period = period;
     }
 
     public Long getId() {
@@ -49,5 +53,13 @@ public class PlanningPeriodEventType {
 
     public void setType(WorkSessionType type) {
         this.type = type;
+    }
+
+    public PlanningPeriod getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(PlanningPeriod period) {
+        this.period = period;
     }
 }

@@ -35,8 +35,8 @@ public class CoursesSpringApplication {
 
 	@Bean
 	public CommandLineRunner loadData(UserRepository repository, WorkSessionRepository workSessionRepository,
-									  WorkSessionTypeRepository coursesTypeRepo, PlanningPeriodRepository planningPeriodRepository,
-									  PlanningPeriodEventTypeRepository periodEventTypeRepository, DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository) {
+									  WorkSessionTypeRepository coursesTypeRepo,
+									  DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository) {
 		return (args) -> {
 			// save a couple of customers
 			repository.save(new User("Titine", "Totot"));
@@ -49,20 +49,6 @@ public class CoursesSpringApplication {
 
 			workSessionRepository.save(new WorkSession(getInstantFromStringDate("22/08/2016 05:00"), getInstantFromStringDate("22/08/2016 08:00"), classes, true));
 			workSessionRepository.save(new WorkSession(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), diploma, true));
-
-			PlanningPeriodEventType coursesPeriod = new PlanningPeriodEventType(Duration.ofHours(10), classes);
-			PlanningPeriodEventType concoursPeriod = new PlanningPeriodEventType(Duration.ofHours(15), diploma);
-			periodEventTypeRepository.save(coursesPeriod);
-			periodEventTypeRepository.save(concoursPeriod);
-
-			List<PlanningPeriodEventType> planningPeriodEventTypes = new ArrayList<>();
-			planningPeriodEventTypes.add(coursesPeriod);
-			planningPeriodEventTypes.add(concoursPeriod);
-
-			Instant startInstant = getInstantFromStringDateWithSeconds("05/09/2016 00:00:00");
-			Instant endInstant = getInstantFromStringDateWithSeconds("11/09/2016 23:59:59");
-
-			planningPeriodRepository.save(new PlanningPeriod(startInstant, endInstant, planningPeriodEventTypes, false));
 
 			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(1, 7, Duration.ofHours(3)));
 			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(1, 18, Duration.ofHours(2)));

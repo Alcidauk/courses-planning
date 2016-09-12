@@ -1,10 +1,7 @@
 package com.alcidauk.ui;
 
 import com.alcidauk.data.bean.WorkSessionType;
-import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
-import com.alcidauk.data.repository.PlanningPeriodRepository;
-import com.alcidauk.data.repository.WorkSessionRepository;
-import com.alcidauk.data.repository.WorkSessionTypeRepository;
+import com.alcidauk.data.repository.*;
 import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.calendar.defaultsession.DefaultSessionSettingsWindow;
 import com.alcidauk.ui.calendar.worksession.WorkSessionCalendar;
@@ -40,6 +37,9 @@ public class HomeLayout extends VerticalLayout {
 
     @Autowired
     private PlanningPeriodRepository planningPeriodRepository;
+
+    @Autowired
+    private PlanningPeriodEventTypeRepository planningPeriodEventTypeRepository;
 
     @Autowired
     private DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository;
@@ -79,7 +79,8 @@ public class HomeLayout extends VerticalLayout {
         Button chooseHoursButton = new Button("Choisir les nombres d'heures");
         chooseHoursButton.addClickListener((Button.ClickListener) clickEvent -> {
             ChooseHoursWindow window = new ChooseHoursWindow(Instant.ofEpochMilli(calendar.getStartDate().getTime()),
-                    Instant.ofEpochMilli(calendar.getEndDate().getTime()), planningPeriodRepository);
+                    Instant.ofEpochMilli(calendar.getEndDate().getTime()), planningPeriodRepository,
+                    planningPeriodEventTypeRepository, workSessionTypeRepository);
             window.init();
 
             UI.getCurrent().addWindow(window);

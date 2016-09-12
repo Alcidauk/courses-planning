@@ -2,15 +2,21 @@ package com.alcidauk.ui;
 
 import com.alcidauk.data.bean.PlanningPeriod;
 import com.alcidauk.data.bean.PlanningPeriodEventType;
+import com.alcidauk.data.bean.WorkSessionType;
+import com.alcidauk.data.repository.PlanningPeriodEventTypeRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
+import com.alcidauk.data.repository.WorkSessionTypeRepository;
+import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,13 +31,19 @@ public class ChooseHoursWindow extends Window {
     private Instant endInstant;
 
     private PlanningPeriodRepository planningPeriodRepository;
+    private PlanningPeriodEventTypeRepository planningPeriodEventTypeRepository;
+    private WorkSessionTypeRepository workSessionTypeRepository;
 
     private VerticalLayout mainLayout;
 
-    public ChooseHoursWindow(Instant startDate, Instant endDate, PlanningPeriodRepository planningPeriodRepository) {
-        this.startInstant = startDate;
-        this.endInstant = endDate;
+    public ChooseHoursWindow(Instant startInstant, Instant endInstant, PlanningPeriodRepository planningPeriodRepository,
+                             PlanningPeriodEventTypeRepository planningPeriodEventTypeRepository,
+                             WorkSessionTypeRepository workSessionTypeRepository) {
+        this.startInstant = startInstant;
+        this.endInstant = endInstant;
         this.planningPeriodRepository = planningPeriodRepository;
+        this.planningPeriodEventTypeRepository = planningPeriodEventTypeRepository;
+        this.workSessionTypeRepository = workSessionTypeRepository;
     }
 
     public void init(){
@@ -44,19 +56,19 @@ public class ChooseHoursWindow extends Window {
         } else {
             List<PlanningPeriodEventType> planningPeriodEventTypes = planningPeriod.getPlanningPeriodEventTypeList();
             if(planningPeriodEventTypes == null || planningPeriodEventTypes.isEmpty()){
-                log.error(String.format("No plannified hours found for %s to %s planning.", startInstant.toString(), endInstant.toString()));
-            } else {
-                for (PlanningPeriodEventType planningPeriodEventType : planningPeriodEventTypes) {
-                    FormLayout parameterForm = new FormLayout();
-                    parameterForm.setCaption(StringUtils.capitalize(planningPeriodEventType.getType().getName()));
+                planningPeriodEventTypes = createPlanningPeriodEventTypesForPeriod(planningPeriod);
+            }
 
-                    TextField duration = new TextField("Nombre d'heures");
-                    duration.setValue(String.valueOf(planningPeriodEventType.getPeriodDuration().toHours()));
+            for (PlanningPeriodEventType planningPeriodEventType : planningPeriodEventTypes) {
+                FormLayout parameterForm = new FormLayout();
+                parameterForm.setCaption(StringUtils.capitalize(planningPeriodEventType.getType().getName()));
 
-                    parameterForm.addComponent(duration);
+                TextField duration = new TextField("Nombre d'heures");
+                duration.setValue(String.valueOf(planningPeriodEventType.getPeriodDuration().toHours()));
 
-                    mainLayout.addComponent(parameterForm);
-                }
+                parameterForm.addComponent(duration);
+
+                mainLayout.addComponent(parameterForm);
             }
         }
 
@@ -77,5 +89,20 @@ public class ChooseHoursWindow extends Window {
 
         setCaption(String.format("Paramètres %s", dates));
         setContent(mainLayout);
+    }
+
+    private List<PlanningPeriodEventType> createPlanningPeriodEventTypesForPeriod(PlanningPeriod planningPeriod) {
+        log.info("Creating planningPeriodEventTypes for planningPeriod " + planningPeriod.toString());
+        List<PlanningPeriodEventType> planningPeriodEventTypes = new ArrayList<>();
+
+        List<WorkSessionType> workSessionTypes =  workSessionTypeRepository.findAll();
+        for(WorkSessionType workSessionType : workSessionTypes){
+            PlanningPeriodEventType planningPeriodEventType = new PlanningPeriodEventType(Duration.ZERO, workSessionType, planningPeriod);
+            planningPeriodEventType = planningPeriodEventTypeRepository.save(planningPeriodEventType);
+
+            planningPeriodEventTypes.add(planningPeriodEventType);
+        }
+
+        return planningPeriodEventTypes;
     }
 }
