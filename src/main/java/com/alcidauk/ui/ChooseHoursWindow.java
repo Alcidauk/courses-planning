@@ -57,7 +57,7 @@ public class ChooseHoursWindow extends Window {
             List<PlanningPeriodEventType> planningPeriodEventTypes = planningPeriod.getPlanningPeriodEventTypeList();
 
             if(planningPeriodEventTypes == null || planningPeriodEventTypes.size() < workSessionTypeRepository.count()){
-                planningPeriodEventTypes = createPlanningPeriodEventTypesForPeriod(planningPeriod);
+                planningPeriodEventTypes = getOrCreatePlanningPeriodEventTypesForPeriod(planningPeriod);
             }
 
             for (PlanningPeriodEventType planningPeriodEventType : planningPeriodEventTypes) {
@@ -92,21 +92,25 @@ public class ChooseHoursWindow extends Window {
         setContent(mainLayout);
     }
 
-    private List<PlanningPeriodEventType> createPlanningPeriodEventTypesForPeriod(PlanningPeriod planningPeriod) {
+    private List<PlanningPeriodEventType> getOrCreatePlanningPeriodEventTypesForPeriod(PlanningPeriod planningPeriod) {
         List<PlanningPeriodEventType> newPlanningPeriodEventTypes = new ArrayList<>();
 
         List<WorkSessionType> workSessionTypes =  workSessionTypeRepository.findAll();
         for(WorkSessionType workSessionType : workSessionTypes){
             List<PlanningPeriodEventType> planningPeriodEventTypesForTypeAndPeriod =
                     planningPeriodEventTypeRepository.findByTypeAndPeriod(workSessionType, planningPeriod);
+            PlanningPeriodEventType planningPeriodEventType;
             if(planningPeriodEventTypesForTypeAndPeriod == null || planningPeriodEventTypesForTypeAndPeriod.isEmpty()) {
                 log.info(String.format("Creating planningPeriodEventTypes for planningPeriod %s and %s",
                         planningPeriod.getStartInstant(), workSessionType.getName()));
 
-                PlanningPeriodEventType planningPeriodEventType = new PlanningPeriodEventType(Duration.ZERO, workSessionType, planningPeriod);
+                planningPeriodEventType = new PlanningPeriodEventType(Duration.ZERO, workSessionType, planningPeriod);
                 planningPeriodEventType = planningPeriodEventTypeRepository.save(planningPeriodEventType);
-                newPlanningPeriodEventTypes.add(planningPeriodEventType);
+            } else {
+                planningPeriodEventType = planningPeriodEventTypesForTypeAndPeriod.get(0);
             }
+
+            newPlanningPeriodEventTypes.add(planningPeriodEventType);
         }
 
         return newPlanningPeriodEventTypes;
