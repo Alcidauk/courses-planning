@@ -55,7 +55,8 @@ public class ChooseHoursWindow extends Window {
             log.error(String.format("Error retrieving planning for dates %s to %s.", startInstant.toString(), endInstant.toString()));
         } else {
             List<PlanningPeriodEventType> planningPeriodEventTypes = planningPeriod.getPlanningPeriodEventTypeList();
-            if(planningPeriodEventTypes == null || planningPeriodEventTypes.isEmpty()){
+
+            if(planningPeriodEventTypes == null || planningPeriodEventTypes.size() < workSessionTypeRepository.count()){
                 planningPeriodEventTypes = createPlanningPeriodEventTypesForPeriod(planningPeriod);
             }
 
@@ -92,17 +93,22 @@ public class ChooseHoursWindow extends Window {
     }
 
     private List<PlanningPeriodEventType> createPlanningPeriodEventTypesForPeriod(PlanningPeriod planningPeriod) {
-        log.info("Creating planningPeriodEventTypes for planningPeriod " + planningPeriod.toString());
-        List<PlanningPeriodEventType> planningPeriodEventTypes = new ArrayList<>();
+        List<PlanningPeriodEventType> newPlanningPeriodEventTypes = new ArrayList<>();
 
         List<WorkSessionType> workSessionTypes =  workSessionTypeRepository.findAll();
         for(WorkSessionType workSessionType : workSessionTypes){
-            PlanningPeriodEventType planningPeriodEventType = new PlanningPeriodEventType(Duration.ZERO, workSessionType, planningPeriod);
-            planningPeriodEventType = planningPeriodEventTypeRepository.save(planningPeriodEventType);
+            List<PlanningPeriodEventType> planningPeriodEventTypesForTypeAndPeriod =
+                    planningPeriodEventTypeRepository.findByTypeAndPeriod(workSessionType, planningPeriod);
+            if(planningPeriodEventTypesForTypeAndPeriod == null || planningPeriodEventTypesForTypeAndPeriod.isEmpty()) {
+                log.info(String.format("Creating planningPeriodEventTypes for planningPeriod %s and %s",
+                        planningPeriod.getStartInstant(), workSessionType.getName()));
 
-            planningPeriodEventTypes.add(planningPeriodEventType);
+                PlanningPeriodEventType planningPeriodEventType = new PlanningPeriodEventType(Duration.ZERO, workSessionType, planningPeriod);
+                planningPeriodEventType = planningPeriodEventTypeRepository.save(planningPeriodEventType);
+                newPlanningPeriodEventTypes.add(planningPeriodEventType);
+            }
         }
 
-        return planningPeriodEventTypes;
+        return newPlanningPeriodEventTypes;
     }
 }
