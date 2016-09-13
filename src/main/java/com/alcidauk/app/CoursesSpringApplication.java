@@ -1,7 +1,13 @@
 package com.alcidauk.app;
 
-import com.alcidauk.data.bean.*;
-import com.alcidauk.data.repository.*;
+import com.alcidauk.data.bean.DefaultUnavailabilitySession;
+import com.alcidauk.data.bean.User;
+import com.alcidauk.data.bean.WorkSession;
+import com.alcidauk.data.bean.WorkSessionType;
+import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
+import com.alcidauk.data.repository.UserRepository;
+import com.alcidauk.data.repository.WorkSessionRepository;
+import com.alcidauk.data.repository.WorkSessionTypeRepository;
 import com.alcidauk.login.AccessControl;
 import com.alcidauk.login.BasicAccessControl;
 import org.slf4j.Logger;
@@ -17,9 +23,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @SpringBootApplication
 @EnableJpaRepositories("com.alcidauk.data.repository")
@@ -42,9 +46,9 @@ public class CoursesSpringApplication {
 			repository.save(new User("Titine", "Totot"));
 			repository.save(new User("John", "Doe"));
 
-			WorkSessionType classes = new WorkSessionType("cours");
-			WorkSessionType diploma = new WorkSessionType("concours");
-			WorkSessionType unavailable = new WorkSessionType("unavailable");
+			WorkSessionType classes = new WorkSessionType("cours", false);
+			WorkSessionType diploma = new WorkSessionType("concours", false);
+			WorkSessionType unavailable = new WorkSessionType("unavailable", true);
 			coursesTypeRepo.save(Arrays.asList(classes, diploma, unavailable));
 
 			workSessionRepository.save(new WorkSession(getInstantFromStringDate("22/08/2016 05:00"), getInstantFromStringDate("22/08/2016 08:00"), classes, true));

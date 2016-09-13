@@ -6,15 +6,11 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.ui.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by alcidauk on 08/09/16.
  */
 public class ManageWorkSessionTypesWindow extends Window {
-
-    private static final Logger log = LoggerFactory.getLogger(ManageWorkSessionTypesWindow.class);
 
     private WorkSessionTypeRepository workSessionTypeRepository;
 
@@ -29,7 +25,7 @@ public class ManageWorkSessionTypesWindow extends Window {
         Grid workSessionTypesGrid = new Grid("Matières");
 
         BeanItemContainer<WorkSessionType> beanItemContainer = new BeanItemContainer<>(WorkSessionType.class);
-        beanItemContainer.addAll(workSessionTypeRepository.findAll());
+        beanItemContainer.addAll(workSessionTypeRepository.findNotSystem());
 
         workSessionTypesGrid.setContainerDataSource(beanItemContainer);
         workSessionTypesGrid.setEditorEnabled(true);
@@ -55,7 +51,7 @@ public class ManageWorkSessionTypesWindow extends Window {
         Button newWorkSessionTypeButton = new Button("Ajouter une matière");
         newWorkSessionTypeButton.addStyleName("margin-5");
         newWorkSessionTypeButton.addClickListener((Button.ClickListener) clickEvent -> {
-            WorkSessionType workSessionType = new WorkSessionType("Nouvelle matière");
+            WorkSessionType workSessionType = new WorkSessionType("Nouvelle matière", false);
             workSessionTypeRepository.save(workSessionType);
             beanItemContainer.addItem(workSessionType);
         });

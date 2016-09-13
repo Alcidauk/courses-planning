@@ -1,10 +1,6 @@
 package com.alcidauk.data.bean;
 
 
-import com.alcidauk.app.CoursesSpringApplication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,9 +9,6 @@ import java.util.List;
  */
 @Entity
 public class WorkSessionType {
-
-    private static final Logger log = LoggerFactory.getLogger(CoursesSpringApplication.class);
-
 
     @Id
     @GeneratedValue
@@ -26,11 +19,14 @@ public class WorkSessionType {
     @OneToMany(fetch = FetchType.EAGER)
     private List<WorkSession> workSessions;
 
+    private boolean system;
+
     public WorkSessionType() {
     }
 
-    public WorkSessionType(String name) {
+    public WorkSessionType(String name, boolean system) {
         this.name = name;
+        this.system = system;
     }
 
     public String getName() {
@@ -56,5 +52,13 @@ public class WorkSessionType {
 
     public void setWorkSessions(List<WorkSession> workSessions) {
         this.workSessions = workSessions;
+    }
+
+    public boolean isSystem() {
+        return system;
+    }
+
+    public void setSystem(boolean system) {
+        this.system = system;
     }
 }

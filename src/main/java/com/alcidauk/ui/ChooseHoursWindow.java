@@ -58,9 +58,9 @@ public class ChooseHoursWindow extends Window {
         if(planningPeriod == null){
             log.error(String.format("Error retrieving planning for dates %s to %s.", startInstant.toString(), endInstant.toString()));
         } else {
-            List<PlanningPeriodEventType> planningPeriodEventTypes = planningPeriod.getPlanningPeriodEventTypeList();
+            List<PlanningPeriodEventType> planningPeriodEventTypes = planningPeriodEventTypeRepository.findByNotSystemTypeAndPeriod(planningPeriod);
 
-            if(planningPeriodEventTypes == null || planningPeriodEventTypes.size() < workSessionTypeRepository.count()){
+            if(planningPeriodEventTypes == null || planningPeriodEventTypes.size() < workSessionTypeRepository.countNotSystem()){
                 planningPeriodEventTypes = getOrCreatePlanningPeriodEventTypesForPeriod(planningPeriod);
             }
 
@@ -111,7 +111,7 @@ public class ChooseHoursWindow extends Window {
     private List<PlanningPeriodEventType> getOrCreatePlanningPeriodEventTypesForPeriod(PlanningPeriod planningPeriod) {
         List<PlanningPeriodEventType> newPlanningPeriodEventTypes = new ArrayList<>();
 
-        List<WorkSessionType> workSessionTypes =  workSessionTypeRepository.findAll();
+        List<WorkSessionType> workSessionTypes =  workSessionTypeRepository.findNotSystem();
         for(WorkSessionType workSessionType : workSessionTypes){
             List<PlanningPeriodEventType> planningPeriodEventTypesForTypeAndPeriod =
                     planningPeriodEventTypeRepository.findByTypeAndPeriod(workSessionType, planningPeriod);
