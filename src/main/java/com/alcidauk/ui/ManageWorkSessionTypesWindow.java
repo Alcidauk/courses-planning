@@ -1,11 +1,15 @@
 package com.alcidauk.ui;
 
+import com.alcidauk.app.Messages;
 import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.WorkSessionTypeRepository;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.*;
+
+import java.util.Locale;
 
 /**
  * Created by alcidauk on 08/09/16.
@@ -22,7 +26,7 @@ public class ManageWorkSessionTypesWindow extends Window {
         VerticalLayout mainLayout = new VerticalLayout();
         mainLayout.setMargin(true);
 
-        Grid workSessionTypesGrid = new Grid("Matières");
+        Grid workSessionTypesGrid = new Grid(Messages.getMessage("com.alcidauk.courses.planning.work.session.types"));
 
         BeanItemContainer<WorkSessionType> beanItemContainer = new BeanItemContainer<>(WorkSessionType.class);
         beanItemContainer.addAll(workSessionTypeRepository.findNotSystem());
@@ -33,6 +37,28 @@ public class ManageWorkSessionTypesWindow extends Window {
         workSessionTypesGrid.setColumns("name");
         workSessionTypesGrid.getColumn("name").setHeaderCaption("Nom");
         workSessionTypesGrid.getColumn("name").setEditable(true);
+        workSessionTypesGrid.getColumn("name").setConverter(new Converter<String, String>() {
+                    @Override
+                    public String convertToModel(String s, Class<? extends String> aClass, Locale locale) throws ConversionException {
+                        return s;
+                    }
+
+                    @Override
+                    public String convertToPresentation(String s, Class<? extends String> aClass, Locale locale) throws ConversionException {
+                        return Messages.getWorkSessionTypeNameMessage(s);
+                    }
+
+                    @Override
+                    public Class<String> getModelType() {
+                        return String.class;
+                    }
+
+                    @Override
+                    public Class<String> getPresentationType() {
+                        return String.class;
+                    }
+                }
+        );
         workSessionTypesGrid.setImmediate(true);
 
         workSessionTypesGrid.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
@@ -48,15 +74,15 @@ public class ManageWorkSessionTypesWindow extends Window {
             }
         });
 
-        Button newWorkSessionTypeButton = new Button("Ajouter une matière");
+        Button newWorkSessionTypeButton = new Button(Messages.getMessage("com.alcidauk.courses.planning.add.work.session.type"));
         newWorkSessionTypeButton.addStyleName("margin-5");
         newWorkSessionTypeButton.addClickListener((Button.ClickListener) clickEvent -> {
-            WorkSessionType workSessionType = new WorkSessionType("Nouvelle matière", false);
+            WorkSessionType workSessionType = new WorkSessionType(Messages.getMessage("com.alcidauk.courses.planning.new.work.session.type"), false);
             workSessionTypeRepository.save(workSessionType);
             beanItemContainer.addItem(workSessionType);
         });
 
-        Button removeSelectedSessionTypeButton = new Button("Supprimer la matière sélectionnée");
+        Button removeSelectedSessionTypeButton = new Button(Messages.getMessage("com.alcidauk.courses.planning.remove.selected.work.session.type"));
         removeSelectedSessionTypeButton.addStyleName("margin-5");
         removeSelectedSessionTypeButton.addClickListener((Button.ClickListener) clickEvent -> {
             Object selectedRow = workSessionTypesGrid.getSelectedRow();

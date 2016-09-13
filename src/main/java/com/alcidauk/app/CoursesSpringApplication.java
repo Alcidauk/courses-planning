@@ -46,8 +46,8 @@ public class CoursesSpringApplication {
 			repository.save(new User("Titine", "Totot"));
 			repository.save(new User("John", "Doe"));
 
-			WorkSessionType classes = new WorkSessionType("cours", false);
-			WorkSessionType diploma = new WorkSessionType("concours", false);
+			WorkSessionType classes = new WorkSessionType("course", false);
+			WorkSessionType diploma = new WorkSessionType("exam", false);
 			WorkSessionType unavailable = new WorkSessionType("unavailable", true);
 			coursesTypeRepo.save(Arrays.asList(classes, diploma, unavailable));
 

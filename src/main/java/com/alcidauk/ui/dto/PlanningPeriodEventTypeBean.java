@@ -1,5 +1,6 @@
 package com.alcidauk.ui.dto;
 
+import com.alcidauk.app.Messages;
 import com.alcidauk.data.bean.PlanningPeriodEventType;
 import com.alcidauk.data.bean.WorkSession;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
@@ -19,7 +20,8 @@ public class PlanningPeriodEventTypeBean {
     }
 
     public String getTypeName(){
-        return planningPeriodEventType.getType() != null ? planningPeriodEventType.getType().getName() : "";
+        return planningPeriodEventType.getType() != null ?
+                Messages.getWorkSessionTypeNameMessage(planningPeriodEventType.getType().getName()) : "";
     }
 
     public long getDurationHours(){

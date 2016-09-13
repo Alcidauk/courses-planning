@@ -1,5 +1,6 @@
 package com.alcidauk.ui.calendar.defaultsession;
 
+import com.alcidauk.app.Messages;
 import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
 import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventMoveHandler;
 import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventResizeHandler;
@@ -74,7 +75,7 @@ public class DefaultSessionSettingsWindow extends Window {
 
         mainLayout.setMargin(true);
 
-        setCaption("Modifier le planning des disponibilités par défaut");
+        setCaption(Messages.getMessage("com.alcidauk.courses.planning.default.session.modify.unavailable"));
         setContent(mainLayout);
     }
 }

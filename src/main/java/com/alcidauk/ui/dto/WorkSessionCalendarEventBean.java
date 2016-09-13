@@ -1,5 +1,6 @@
 package com.alcidauk.ui.dto;
 
+import com.alcidauk.app.Messages;
 import com.alcidauk.data.bean.WorkSession;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
@@ -29,7 +30,7 @@ public class WorkSessionCalendarEventBean implements CalendarEvent {
     @Override
     public String getCaption() {
         return workSession.getTitle() != null ?
-                workSession.getTitle() : workSession.getType().getName();
+                workSession.getTitle() : Messages.getWorkSessionTypeNameMessage(workSession.getType().getName());
     }
 
     @Override

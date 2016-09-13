@@ -1,11 +1,13 @@
 package com.alcidauk.ui;
 
+import com.alcidauk.app.Messages;
 import com.alcidauk.data.bean.PlanningPeriod;
 import com.alcidauk.data.bean.PlanningPeriodEventType;
 import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.PlanningPeriodEventTypeRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
 import com.alcidauk.data.repository.WorkSessionTypeRepository;
+import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.dto.PlanningPeriodEventTypeBean;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
@@ -74,10 +76,10 @@ public class ChooseHoursWindow extends Window {
             planningPeriodEventTypesGrid.setEditorEnabled(true);
             planningPeriodEventTypesGrid.setColumns("typeName", "durationHours");
 
-            planningPeriodEventTypesGrid.getColumn("typeName").setHeaderCaption("Matière");
+            planningPeriodEventTypesGrid.getColumn("typeName").setHeaderCaption(Messages.getMessage("com.alcidauk.courses.planning.work.session.type"));
             planningPeriodEventTypesGrid.getColumn("typeName").setEditable(false);
 
-            planningPeriodEventTypesGrid.getColumn("durationHours").setHeaderCaption("Nombre d'heures");
+            planningPeriodEventTypesGrid.getColumn("durationHours").setHeaderCaption(Messages.getMessage("com.alcidauk.courses.planning.choose.hours.number"));
             planningPeriodEventTypesGrid.getColumn("durationHours").setEditable(true);
 
             planningPeriodEventTypesGrid.setImmediate(true);
@@ -101,10 +103,12 @@ public class ChooseHoursWindow extends Window {
         mainLayout.setMargin(true);
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String dates = String.format("du %s au %s", dateTimeFormatter.format(startInstant.atZone(ZoneId.systemDefault())),
-                dateTimeFormatter.format(endInstant.atZone(ZoneId.systemDefault())));
+        String dates = Messages.getMessage("com.alcidauk.courses.planning.choose.hours.from.to",
+                dateTimeFormatter.format(startInstant.atZone(ZoneId.systemDefault())),
+                dateTimeFormatter.format(endInstant.atZone(ZoneId.systemDefault()))
+        );
 
-        setCaption(String.format("Paramètres %s", dates));
+        setCaption(Messages.getMessage("com.alcidauk.courses.planning.choose.hours.settings.of", dates));
         setContent(mainLayout);
     }
 

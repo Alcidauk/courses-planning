@@ -1,5 +1,6 @@
 package com.alcidauk.ui.calendar.worksession;
 
+import com.alcidauk.app.Messages;
 import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.ui.CoursesUI;
@@ -37,9 +38,9 @@ public class WorkSessionSettingsWindow extends Window {
         VerticalLayout subContent = new VerticalLayout();
         subContent.setMargin(true);
 
-        doneCheck = new CheckBox("Effectué");
+        doneCheck = new CheckBox(Messages.getMessage("com.alcidauk.courses.planning.work.session.done"));
 
-        descriptionTxt = new TextArea("Description :");
+        descriptionTxt = new TextArea(Messages.getMessage("com.alcidauk.courses.planning.work.session.description") + " :");
 
         calendarEventFieldGroup = new BeanFieldGroup<>(WorkSession.class);
         calendarEventFieldGroup.bind(doneCheck, "done");

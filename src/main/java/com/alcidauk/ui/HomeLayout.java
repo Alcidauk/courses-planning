@@ -1,5 +1,6 @@
 package com.alcidauk.ui;
 
+import com.alcidauk.app.Messages;
 import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.*;
 import com.alcidauk.login.CurrentUser;
@@ -76,7 +77,7 @@ public class HomeLayout extends VerticalLayout {
             rightLayout.addComponent(workSessionTypeInPeriodLayout);
         }
 
-        Button chooseHoursButton = new Button("Choisir les nombres d'heures");
+        Button chooseHoursButton = new Button(Messages.getMessage("com.alcidauk.courses.planning.choose.hours"));
         chooseHoursButton.addClickListener((Button.ClickListener) clickEvent -> {
             ChooseHoursWindow window = new ChooseHoursWindow(Instant.ofEpochMilli(calendar.getStartDate().getTime()),
                     Instant.ofEpochMilli(calendar.getEndDate().getTime()), planningPeriodRepository,
@@ -97,7 +98,7 @@ public class HomeLayout extends VerticalLayout {
     }
 
     private void createTopbar(){
-        Label nameLabel = new Label("Coucou, " + CurrentUser.get() + " !");
+        Label nameLabel = new Label(Messages.getMessage("com.alcidauk.courses.planning.hello", CurrentUser.get()));
         nameLabel.setHeight(100, Unit.PERCENTAGE);
         nameLabel.addStyleName("white-font");
         nameLabel.addStyleName("margin-5");
@@ -123,11 +124,11 @@ public class HomeLayout extends VerticalLayout {
         MenuBar buttonsMenu = new MenuBar();
         buttonsMenu.addStyleName("margin-5");
 
-        MenuBar.MenuItem settingsItem = buttonsMenu.addItem("Paramètres", null, null);
-        settingsItem.addItem("Modifier les indisponibilités par défaut", defaultUnavailabilitySessionCommand);
-        settingsItem.addItem("Gérer les matières", manageWorkSessionTypesCommand);
+        MenuBar.MenuItem settingsItem = buttonsMenu.addItem(Messages.getMessage("com.alcidauk.courses.planning.settings"), null, null);
+        settingsItem.addItem(Messages.getMessage("com.alcidauk.courses.planning.modify.default.unavailable.sessions"), defaultUnavailabilitySessionCommand);
+        settingsItem.addItem(Messages.getMessage("com.alcidauk.courses.planning.manage.work.session.types"), manageWorkSessionTypesCommand);
 
-        MenuBar.MenuItem logoutItem = buttonsMenu.addItem("Déconnexion", null, logoutCommand);
+        MenuBar.MenuItem logoutItem = buttonsMenu.addItem(Messages.getMessage("com.alcidauk.courses.planning.logout"), null, logoutCommand);
         logoutItem.setStyleName("red-background");
 
         this.topbar = new HorizontalLayout(nameLabel, buttonsMenu);

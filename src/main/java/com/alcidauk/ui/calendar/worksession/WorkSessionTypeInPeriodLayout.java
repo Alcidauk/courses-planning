@@ -1,5 +1,6 @@
 package com.alcidauk.ui.calendar.worksession;
 
+import com.alcidauk.app.Messages;
 import com.alcidauk.data.bean.PlanningPeriod;
 import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.bean.WorkSessionType;
@@ -33,7 +34,7 @@ public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements Wor
     }
 
     public void init(){
-        calendarTypeLabel = new Label(StringUtils.capitalize(workSessionType.getName()) + " : ");
+        calendarTypeLabel = new Label(Messages.getWorkSessionTypeNameMessage(workSessionType.getName()) + " : ");
         calendarTypeLabel.addStyleName("bold-font");
 
         hoursEvents = new Label();
@@ -50,7 +51,13 @@ public class WorkSessionTypeInPeriodLayout extends VerticalLayout implements Wor
     }
 
     private String getHoursEventValue() {
-        return String.format("Effectuées / Restantes / Plannifiées : %d / %d / %d", getLeftHoursValue(), getDoneHoursValue(), 0);
+        return String.format("%s / %s / %s : %d / %d / %d",
+                Messages.getMessage("com.alcidauk.courses.planning.work.session.types.in.period.done"),
+                Messages.getMessage("com.alcidauk.courses.planning.work.session.types.in.period.remaining"),
+                Messages.getMessage("com.alcidauk.courses.planning.work.session.types.in.period.planned"),
+                getLeftHoursValue(),
+                getDoneHoursValue(),
+                0);
     }
 
     private long getLeftHoursValue() {
