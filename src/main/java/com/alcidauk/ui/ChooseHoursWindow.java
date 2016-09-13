@@ -6,9 +6,13 @@ import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.PlanningPeriodEventTypeRepository;
 import com.alcidauk.data.repository.PlanningPeriodRepository;
 import com.alcidauk.data.repository.WorkSessionTypeRepository;
+import com.alcidauk.ui.dto.PlanningPeriodEventTypeBean;
+import com.vaadin.data.fieldgroup.FieldGroup;
+import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.ui.*;
-import org.apache.commons.lang3.StringUtils;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,27 +64,39 @@ public class ChooseHoursWindow extends Window {
                 planningPeriodEventTypes = getOrCreatePlanningPeriodEventTypesForPeriod(planningPeriod);
             }
 
-            for (PlanningPeriodEventType planningPeriodEventType : planningPeriodEventTypes) {
-                FormLayout parameterForm = new FormLayout();
-                parameterForm.setCaption(StringUtils.capitalize(planningPeriodEventType.getType().getName()));
-
-                TextField duration = new TextField("Nombre d'heures");
-                duration.setValue(String.valueOf(planningPeriodEventType.getPeriodDuration().toHours()));
-
-                parameterForm.addComponent(duration);
-
-                mainLayout.addComponent(parameterForm);
+            BeanItemContainer<PlanningPeriodEventTypeBean> beanItemContainer = new BeanItemContainer<>(PlanningPeriodEventTypeBean.class);
+            for(PlanningPeriodEventType planningPeriodEventType : planningPeriodEventTypes) {
+                beanItemContainer.addBean(new PlanningPeriodEventTypeBean(planningPeriodEventType));
             }
+
+            Grid planningPeriodEventTypesGrid = new Grid(beanItemContainer);
+
+            planningPeriodEventTypesGrid.setEditorEnabled(true);
+            planningPeriodEventTypesGrid.setColumns("typeName", "durationHours");
+
+            planningPeriodEventTypesGrid.getColumn("typeName").setHeaderCaption("Matière");
+            planningPeriodEventTypesGrid.getColumn("typeName").setEditable(false);
+
+            planningPeriodEventTypesGrid.getColumn("durationHours").setHeaderCaption("Nombre d'heures");
+            planningPeriodEventTypesGrid.getColumn("durationHours").setEditable(true);
+
+            planningPeriodEventTypesGrid.setImmediate(true);
+            planningPeriodEventTypesGrid.getEditorFieldGroup().addCommitHandler(new FieldGroup.CommitHandler() {
+                @Override
+                public void preCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
+
+                }
+
+                @Override
+                public void postCommit(FieldGroup.CommitEvent commitEvent) throws FieldGroup.CommitException {
+                    BeanItem<PlanningPeriodEventTypeBean> planningPeriodEventTypeBeanItem =
+                            (BeanItem<PlanningPeriodEventTypeBean>) commitEvent.getFieldBinder().getItemDataSource();
+                    planningPeriodEventTypeRepository.save(planningPeriodEventTypeBeanItem.getBean().getPlanningPeriodEventType());
+                }
+            });
+
+            mainLayout.addComponent(planningPeriodEventTypesGrid);
         }
-
-        Button validButton = new Button("Valider");
-        Button cancelButton = new Button("Annuler");
-
-        HorizontalLayout buttonsLayout = new HorizontalLayout(validButton, cancelButton);
-        buttonsLayout.setMargin(true);
-        buttonsLayout.setWidth(100, Unit.PERCENTAGE);
-
-        mainLayout.addComponent(buttonsLayout);
 
         mainLayout.setMargin(true);
 
