@@ -2,12 +2,16 @@ package com.alcidauk.ui;
 
 import com.alcidauk.app.Messages;
 import com.alcidauk.data.bean.WorkSessionType;
+import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.data.repository.WorkSessionTypeRepository;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import java.util.Locale;
 
@@ -16,10 +20,14 @@ import java.util.Locale;
  */
 public class ManageWorkSessionTypesWindow extends Window {
 
-    private WorkSessionTypeRepository workSessionTypeRepository;
+    private static final Logger log = LoggerFactory.getLogger(ManageWorkSessionTypesWindow.class);
 
-    public ManageWorkSessionTypesWindow(WorkSessionTypeRepository workSessionTypeRepository) {
+    private WorkSessionTypeRepository workSessionTypeRepository;
+    private WorkSessionRepository workSessionRepository;
+
+    public ManageWorkSessionTypesWindow(WorkSessionTypeRepository workSessionTypeRepository, WorkSessionRepository workSessionRepository) {
         this.workSessionTypeRepository = workSessionTypeRepository;
+        this.workSessionRepository = workSessionRepository;
     }
 
     public void init() {
@@ -89,13 +97,41 @@ public class ManageWorkSessionTypesWindow extends Window {
             if(selectedRow != null){
                 BeanItem<WorkSessionType> workSessionTypeBeanItem =
                         (BeanItem<WorkSessionType>) workSessionTypesGrid.getContainerDataSource().getItem(selectedRow);
-                workSessionTypeRepository.delete(workSessionTypeBeanItem.getBean());
-                beanItemContainer.removeItem(workSessionTypeBeanItem);
+
+                if(workSessionTypeBeanItem.getBean().getWorkSessions().size() > 0){
+                    log.info("need to open removal window");
+                    ConfirmDialog.show(UI.getCurrent(),
+                            Messages.getMessage("com.alcidauk.courses.planning.info"),
+                            Messages.getMessage("com.alcidauk.courses.planning.work.session.type.has.sessions"),
+                            Messages.getMessage("com.alcidauk.courses.planning.confirm"),
+                            Messages.getMessage("com.alcidauk.courses.planning.cancel"),
+                            (ConfirmDialog.Listener) confirmDialog -> {
+                                if (confirmDialog.isConfirmed()) {
+                                    removeWorkSessionType(workSessionTypesGrid, beanItemContainer, workSessionTypeBeanItem);
+                                } else {
+                                    Notification.show(Messages.getMessage("com.alcidauk.courses.planning.info"),
+                                            Messages.getMessage("com.alcidauk.courses.planning.work.session.type.cancel.removal"),
+                                            Notification.Type.WARNING_MESSAGE);
+                                }
+                            });
+                } else {
+                    removeWorkSessionType(workSessionTypesGrid, beanItemContainer, workSessionTypeBeanItem);
+                }
             }
         });
 
         mainLayout.addComponent(workSessionTypesGrid);
         mainLayout.addComponent(new HorizontalLayout(newWorkSessionTypeButton, removeSelectedSessionTypeButton));
         setContent(mainLayout);
+    }
+
+    private void removeWorkSessionType(Grid workSessionTypesGrid, BeanItemContainer<WorkSessionType> beanItemContainer,
+                                       BeanItem<WorkSessionType> workSessionTypeBeanItem) {
+        workSessionRepository.delete(workSessionTypeBeanItem.getBean().getWorkSessions());
+        workSessionTypeRepository.delete(workSessionTypeBeanItem.getBean().getId());
+
+        beanItemContainer.removeItem(workSessionTypeBeanItem);
+        // TODO workaround to force grid to update (this actually does not work)
+        workSessionTypesGrid.setContainerDataSource(beanItemContainer);
     }
 }

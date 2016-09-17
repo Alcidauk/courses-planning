@@ -112,7 +112,7 @@ public class HomeLayout extends VerticalLayout {
             window.center();
         };
         MenuBar.Command manageWorkSessionTypesCommand = (MenuBar.Command) selectedItem -> {
-            ManageWorkSessionTypesWindow window = new ManageWorkSessionTypesWindow(workSessionTypeRepository);
+            ManageWorkSessionTypesWindow window = new ManageWorkSessionTypesWindow(workSessionTypeRepository, workSessionRepository);
 
             window.init();
 

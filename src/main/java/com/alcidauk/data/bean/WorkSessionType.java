@@ -16,7 +16,7 @@ public class WorkSessionType {
 
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "type",fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<WorkSession> workSessions;
 
     private boolean system;
