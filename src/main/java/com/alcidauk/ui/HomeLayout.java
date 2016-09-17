@@ -65,7 +65,7 @@ public class HomeLayout extends VerticalLayout {
     private void createRightLayout() {
         rightLayout = new VerticalLayout();
 
-        List<WorkSessionType> workSessionTypes = workSessionTypeRepository.findAll();
+        List<WorkSessionType> workSessionTypes = workSessionTypeRepository.findNotSystem();
         for(WorkSessionType workSessionType : workSessionTypes){
             WorkSessionTypeInPeriodLayout workSessionTypeInPeriodLayout =
                     new WorkSessionTypeInPeriodLayout(workSessionRepository, workSessionType);
