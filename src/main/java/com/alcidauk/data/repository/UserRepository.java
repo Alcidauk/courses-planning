@@ -14,5 +14,7 @@ import java.util.List;
 @UIScope
 public interface UserRepository extends JpaRepository<User, Long> {
 
+        User findByUsername(String username);
+
         List<User> findByPasswordAndUsername(String username, String password);
 }

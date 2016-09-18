@@ -1,9 +1,7 @@
 package com.alcidauk.data.bean;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.Duration;
 
 /**
@@ -22,13 +20,17 @@ public class DefaultUnavailabilitySession {
 
     private Duration duration;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User user;
+
     public DefaultUnavailabilitySession() {
     }
 
-    public DefaultUnavailabilitySession(int dayOfWeek, int startHour, Duration duration) {
+    public DefaultUnavailabilitySession(int dayOfWeek, int startHour, Duration duration, User user) {
         this.dayOfWeek = dayOfWeek;
         this.startHour = startHour;
         this.duration = duration;
+        this.user = user;
     }
 
     public Long getId() {
@@ -61,5 +63,13 @@ public class DefaultUnavailabilitySession {
 
     public void setStartHour(int startHour) {
         this.startHour = startHour;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

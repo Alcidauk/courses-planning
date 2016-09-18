@@ -43,8 +43,11 @@ public class CoursesSpringApplication {
 									  DefaultUnavailabilitySessionRepository defaultUnavailabilitySessionRepository) {
 		return (args) -> {
 			// save a couple of customers
-			repository.save(new User("Titine", "Totot"));
-			repository.save(new User("John", "Doe"));
+			User userTitine = new User("Titine", "Totot");
+			User userJohn = new User("John", "Doe");
+
+			repository.save(userTitine);
+			repository.save(userJohn);
 
 			WorkSessionType classes = new WorkSessionType("course", false);
 			WorkSessionType diploma = new WorkSessionType("exam", false);
@@ -54,10 +57,10 @@ public class CoursesSpringApplication {
 			workSessionRepository.save(new WorkSession(getInstantFromStringDate("22/08/2016 05:00"), getInstantFromStringDate("22/08/2016 08:00"), classes, true));
 			workSessionRepository.save(new WorkSession(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), diploma, true));
 
-			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(1, 7, Duration.ofHours(3)));
-			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(1, 18, Duration.ofHours(2)));
-			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(2, 7, Duration.ofHours(3)));
-			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(2, 18, Duration.ofHours(3)));
+			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(1, 7, Duration.ofHours(3), userTitine));
+			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(1, 18, Duration.ofHours(2), userTitine));
+			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(2, 7, Duration.ofHours(3), userJohn));
+			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(2, 18, Duration.ofHours(3), userJohn));
 		};
 	}
 

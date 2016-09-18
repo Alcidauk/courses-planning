@@ -2,7 +2,6 @@ package com.alcidauk.data.bean;
 
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
@@ -12,9 +11,6 @@ import javax.persistence.Id;
 public class User {
 
     @Id
-    @GeneratedValue
-    private Long id;
-
     private String username;
 
     private String password;
@@ -25,14 +21,6 @@ public class User {
     public User(String username, String password) {
         this.password = password;
         this.username = username;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {

@@ -2,6 +2,7 @@ package com.alcidauk.ui.calendar.defaultsession;
 
 import com.alcidauk.data.bean.DefaultUnavailabilitySession;
 import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
+import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.dto.DefaultSessionCalendarBean;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
@@ -29,7 +30,7 @@ public class DefaultSessionsEventProvider implements CalendarEventProvider {
 
     @Override
     public List<CalendarEvent> getEvents(Date start, Date end) {
-        List<DefaultUnavailabilitySession> sessions = defaultUnavailabilitySessionRepository.findAll();
+        List<DefaultUnavailabilitySession> sessions = defaultUnavailabilitySessionRepository.findByUsername(CurrentUser.get());
         return sessions.stream().map(session ->
                 new DefaultSessionCalendarBean(session, startDate)).collect(Collectors.toList());
     }
