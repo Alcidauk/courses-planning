@@ -98,7 +98,7 @@ public class HomeLayout extends VerticalLayout {
     }
 
     private void createTopbar(){
-        Label nameLabel = new Label(Messages.getMessage("com.alcidauk.courses.planning.hello", CurrentUser.get()));
+        Label nameLabel = new Label(Messages.getMessage("com.alcidauk.courses.planning.hello", CurrentUser.get().getUsername()));
         nameLabel.setHeight(100, Unit.PERCENTAGE);
         nameLabel.addStyleName("white-font");
         nameLabel.addStyleName("margin-5");

@@ -30,7 +30,7 @@ public class DefaultSessionsEventProvider implements CalendarEventProvider {
 
     @Override
     public List<CalendarEvent> getEvents(Date start, Date end) {
-        List<DefaultUnavailabilitySession> sessions = defaultUnavailabilitySessionRepository.findByUsername(CurrentUser.get());
+        List<DefaultUnavailabilitySession> sessions = defaultUnavailabilitySessionRepository.findByUser(CurrentUser.get());
         return sessions.stream().map(session ->
                 new DefaultSessionCalendarBean(session, startDate)).collect(Collectors.toList());
     }

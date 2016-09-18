@@ -55,7 +55,7 @@ public class ChooseHoursWindow extends Window {
     public void init(){
         mainLayout = new VerticalLayout();
 
-        PlanningPeriod planningPeriod = planningPeriodRepository.findByStartInstantAndEndInstant(startInstant, endInstant);
+        PlanningPeriod planningPeriod = planningPeriodRepository.findByStartInstantAndEndInstantAndUser(startInstant, endInstant, CurrentUser.get());
 
         if(planningPeriod == null){
             log.error(String.format("Error retrieving planning for dates %s to %s.", startInstant.toString(), endInstant.toString()));

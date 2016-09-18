@@ -1,5 +1,7 @@
 package com.alcidauk.login;
 
+import com.alcidauk.data.bean.User;
+import com.alcidauk.data.repository.UserRepository;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WrappedSession;
 
@@ -24,14 +26,9 @@ public final class CurrentUser {
      * @throws IllegalStateException
      *             if the current session cannot be accessed.
      */
-    public static String get() {
-        String currentUser = (String) getCurrentHttpSession().getAttribute(
+    public static User get() {
+        return (User) getCurrentHttpSession().getAttribute(
                 CURRENT_USER_SESSION_ATTRIBUTE_KEY);
-        if (currentUser == null) {
-            return "";
-        } else {
-            return currentUser;
-        }
     }
 
     private static WrappedSession getCurrentHttpSession() {
@@ -50,7 +47,7 @@ public final class CurrentUser {
      * @throws IllegalStateException
      *             if the current session cannot be accessed.
      */
-    public static void set(String currentUser) {
+    public static void set(User currentUser) {
         if (currentUser == null) {
             getCurrentHttpSession().removeAttribute(
                     CURRENT_USER_SESSION_ATTRIBUTE_KEY);

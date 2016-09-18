@@ -24,13 +24,13 @@ public class BasicAccessControl implements AccessControl {
             return false;
         }
 
-        CurrentUser.set(users.get(0).getUsername());
+        CurrentUser.set(users.get(0));
         return true;
     }
 
     @Override
     public boolean isUserSignedIn() {
-        return !CurrentUser.get().isEmpty();
+        return CurrentUser.get() != null;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class BasicAccessControl implements AccessControl {
 
     @Override
     public String getPrincipalName() {
-        return CurrentUser.get();
+        return CurrentUser.get().getUsername();
     }
 
 }
