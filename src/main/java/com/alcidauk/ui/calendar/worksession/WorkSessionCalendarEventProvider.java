@@ -77,13 +77,9 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
     }
 
     private PlanningPeriod createPlanningPeriod(Instant startInstant, Instant endInstant) {
-        PlanningPeriod planningPeriod = new PlanningPeriod(startInstant, endInstant, getPlanningPeriodTypes(), false, CurrentUser.get());
+        PlanningPeriod planningPeriod = new PlanningPeriod(startInstant, endInstant, false, CurrentUser.get());
         planningPeriodRepository.save(planningPeriod);
         return planningPeriod;
-    }
-
-    private List<PlanningPeriodEventType> getPlanningPeriodTypes() {
-        return null;
     }
 
     private void generateDefaultSessionsAsEvents(Date start, WorkSessionType unavailableWorkSessionType) {

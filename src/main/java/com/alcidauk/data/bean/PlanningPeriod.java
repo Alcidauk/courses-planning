@@ -30,11 +30,9 @@ public class PlanningPeriod {
     public PlanningPeriod() {
     }
 
-    public PlanningPeriod(Instant startInstant, Instant endInstant, List<PlanningPeriodEventType> planningPeriodEventTypeList,
-                          boolean defaultSessionsGenerated, User user) {
+    public PlanningPeriod(Instant startInstant, Instant endInstant, boolean defaultSessionsGenerated, User user) {
         this.startInstant = startInstant;
         this.endInstant = endInstant;
-        this.planningPeriodEventTypeList = planningPeriodEventTypeList;
         this.defaultSessionsGenerated = defaultSessionsGenerated;
         this.user = user;
     }
