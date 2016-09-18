@@ -2,10 +2,7 @@ package com.alcidauk.ui.calendar;
 
 import com.vaadin.ui.UI;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.WeekFields;
 import java.util.Date;
@@ -33,5 +30,9 @@ public class CalendarUtils {
         zonedDate = zonedDate.with(WeekFields.of(UI.getCurrent().getLocale()).dayOfWeek(), dayOfWeek);
         zonedDate = zonedDate.with(ChronoField.HOUR_OF_DAY, startHour);
         return zonedDate;
+    }
+
+    public static LocalDateTime getLocalDateTimeFromInstant(Instant instant){
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     }
 }
