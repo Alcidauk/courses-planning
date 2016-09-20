@@ -7,16 +7,18 @@ import com.alcidauk.ui.calendar.CalendarUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Predicate;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Created by alcidauk on 18/09/16.
  */
 public class SessionGenerator {
+
+    private static final long MAX_HOURS_TO_PLACE = 4;
+    private static final long CESURE_BETWEEN_SESSIONS_HOURS = 1;
 
     private PlanningPeriod period;
     private List<WorkSession> unavailableWorkSessions;
@@ -45,16 +47,54 @@ public class SessionGenerator {
     List<WorkSession> generateWorkSessions(List<DurationTime> availablePeriods) {
         List<WorkSession> workSessions = new ArrayList<>();
 
-        List<PlanningPeriodEventType> tmpPeriodEventTypes = periodEventTypes.stream().filter(new Predicate<PlanningPeriodEventType>() {
-            @Override
-            public boolean test(PlanningPeriodEventType planningPeriodEventType) {
-                return planningPeriodEventType.getPeriodDuration().toHours() > 0;
-            }
-        }).collect(Collectors.toList());
+        List<PlanningPeriodEventType> tmpPeriodEventTypes = periodEventTypes.stream().filter(planningPeriodEventType ->
+                planningPeriodEventType.getPeriodDuration().toHours() > 0).collect(Collectors.toList());
+
+        Map<PlanningPeriodEventType, Long> hoursPlacedByPeriodEventType = new HashMap<>();
+
+        int periodEventTypeIndex = 0;
 
         for (DurationTime durationTime : availablePeriods) {
-            if (durationTime.getDuration().toHours() != 0) {
+            long remainingHoursToPlace = durationTime.getDuration().toHours();
+            LocalDateTime startDateTime = durationTime.getStartDateTime();
 
+            while(tmpPeriodEventTypes.size() > periodEventTypeIndex
+                    && remainingHoursToPlace > 0
+                    && startDateTime.isBefore(durationTime.getEndDateTime())){
+                PlanningPeriodEventType periodEventTypeToPlace = tmpPeriodEventTypes.get(periodEventTypeIndex);
+
+                Long hoursAlreadyPlaced = hoursPlacedByPeriodEventType.get(periodEventTypeToPlace);
+                if(hoursAlreadyPlaced == null){
+                    hoursAlreadyPlaced = 0L;
+                }
+
+                long hoursToPlace = Math.min(durationTime.getDuration().toHours(),
+                        Math.min(periodEventTypeToPlace.getPeriodDuration().toHours() - hoursAlreadyPlaced, MAX_HOURS_TO_PLACE));
+
+                LocalDateTime newStartDateTime = startDateTime.plus(hoursToPlace, ChronoUnit.HOURS);
+                workSessions.add(new WorkSession(startDateTime.toInstant(ZoneOffset.UTC),
+                        newStartDateTime.toInstant(ZoneOffset.UTC),
+                        periodEventTypeToPlace.getType(),
+                        false)
+                );
+
+                // update hours placed for periodtype
+                long totalOfHoursPlaced = hoursAlreadyPlaced + hoursToPlace;
+                hoursPlacedByPeriodEventType.put(periodEventTypeToPlace, totalOfHoursPlaced);
+
+                // remove from periodtype that have hours to place if all has been placed
+                if(totalOfHoursPlaced >= periodEventTypeToPlace.getPeriodDuration().toHours()){
+                    tmpPeriodEventTypes.remove(periodEventTypeToPlace);
+                }
+
+                startDateTime = newStartDateTime.plus(CESURE_BETWEEN_SESSIONS_HOURS, ChronoUnit.HOURS);
+                remainingHoursToPlace -= hoursToPlace;
+
+                if(periodEventTypeIndex == tmpPeriodEventTypes.size() -1){
+                    periodEventTypeIndex = 0;
+                } else {
+                    periodEventTypeIndex++;
+                }
             }
         }
 
