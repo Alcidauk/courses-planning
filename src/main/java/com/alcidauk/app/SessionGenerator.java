@@ -3,6 +3,7 @@ package com.alcidauk.app;
 import com.alcidauk.data.bean.PlanningPeriod;
 import com.alcidauk.data.bean.PlanningPeriodEventType;
 import com.alcidauk.data.bean.WorkSession;
+import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.ui.calendar.CalendarUtils;
 
 import java.time.Duration;
@@ -24,10 +25,27 @@ public class SessionGenerator {
     private List<WorkSession> unavailableWorkSessions;
     private List<PlanningPeriodEventType> periodEventTypes;
 
-    public SessionGenerator(PlanningPeriod period, List<WorkSession> unavailableWorkSessions, List<PlanningPeriodEventType> periodEventTypes) {
+    private WorkSessionRepository workSessionRepository;
+
+    private LocalDateTime now;
+
+    public SessionGenerator(PlanningPeriod period, List<WorkSession> unavailableWorkSessions,
+                            List<PlanningPeriodEventType> periodEventTypes, WorkSessionRepository workSessionRepository,
+                            LocalDateTime now) {
         this.period = period;
         this.unavailableWorkSessions = unavailableWorkSessions;
         this.periodEventTypes = periodEventTypes;
+        this.workSessionRepository = workSessionRepository;
+        this.now = now;
+    }
+
+    public SessionGenerator(PlanningPeriod period, List<WorkSession> unavailableWorkSessions,
+                            List<PlanningPeriodEventType> periodEventTypes, WorkSessionRepository workSessionRepository) {
+        this.period = period;
+        this.unavailableWorkSessions = unavailableWorkSessions;
+        this.periodEventTypes = periodEventTypes;
+        this.workSessionRepository = workSessionRepository;
+        this.now = LocalDateTime.now();
     }
 
     // TODO finish it when generateWorkSessions is finished. Has to return result
@@ -47,58 +65,87 @@ public class SessionGenerator {
     List<WorkSession> generateWorkSessions(List<DurationTime> availablePeriods) {
         List<WorkSession> workSessions = new ArrayList<>();
 
-        List<PlanningPeriodEventType> tmpPeriodEventTypes = periodEventTypes.stream().filter(planningPeriodEventType ->
-                planningPeriodEventType.getPeriodDuration().toHours() > 0).collect(Collectors.toList());
+        Map<PlanningPeriodEventType, Long> hoursPlacedByPeriodEventType = initializeHoursAlreadyPlaced(periodEventTypes);
 
-        Map<PlanningPeriodEventType, Long> hoursPlacedByPeriodEventType = new HashMap<>();
+        List<PlanningPeriodEventType> tmpPeriodEventTypes = periodEventTypes.stream().filter(planningPeriodEventType ->
+                planningPeriodEventType.getPeriodDuration().toHours() > hoursPlacedByPeriodEventType.get(planningPeriodEventType)
+        ).collect(Collectors.toList());
+
+        availablePeriods.stream().filter(durationTime
+                -> durationTime.getEndDateTime().isAfter(now)).collect(Collectors.toList());
 
         int periodEventTypeIndex = 0;
 
         for (DurationTime durationTime : availablePeriods) {
-            long remainingHoursToPlace = durationTime.getDuration().toHours();
-            LocalDateTime startDateTime = durationTime.getStartDateTime();
+            if(tmpPeriodEventTypes.size() > 0) {
+                long remainingHoursToPlace = durationTime.getDuration().toHours() -
+                        hoursPlacedByPeriodEventType.get(tmpPeriodEventTypes.get(periodEventTypeIndex));
 
-            while(tmpPeriodEventTypes.size() > periodEventTypeIndex
-                    && remainingHoursToPlace > 0
-                    && startDateTime.isBefore(durationTime.getEndDateTime())){
-                PlanningPeriodEventType periodEventTypeToPlace = tmpPeriodEventTypes.get(periodEventTypeIndex);
+                LocalDateTime startDateTime = durationTime.getStartDateTime().isAfter(now) ? durationTime.getStartDateTime() :
+                        now.truncatedTo(ChronoUnit.HOURS);
 
-                Long hoursAlreadyPlaced = hoursPlacedByPeriodEventType.get(periodEventTypeToPlace);
-                if(hoursAlreadyPlaced == null){
-                    hoursAlreadyPlaced = 0L;
-                }
+                while (tmpPeriodEventTypes.size() > periodEventTypeIndex
+                        && remainingHoursToPlace > 0
+                        && startDateTime.isBefore(durationTime.getEndDateTime())) {
+                    PlanningPeriodEventType periodEventTypeToPlace = tmpPeriodEventTypes.get(periodEventTypeIndex);
 
-                long hoursToPlace = Math.min(durationTime.getDuration().toHours(),
-                        Math.min(periodEventTypeToPlace.getPeriodDuration().toHours() - hoursAlreadyPlaced, MAX_HOURS_TO_PLACE));
+                    Long hoursAlreadyPlaced = hoursPlacedByPeriodEventType.get(periodEventTypeToPlace);
+                    if (hoursAlreadyPlaced == null) {
+                        hoursAlreadyPlaced = 0L;
+                    }
 
-                LocalDateTime newStartDateTime = startDateTime.plus(hoursToPlace, ChronoUnit.HOURS);
-                workSessions.add(new WorkSession(startDateTime.toInstant(ZoneOffset.UTC),
-                        newStartDateTime.toInstant(ZoneOffset.UTC),
-                        periodEventTypeToPlace.getType(),
-                        false)
-                );
+                    long hoursToPlace = Math.min(Duration.between(startDateTime, durationTime.getEndDateTime()).toHours(),
+                            Math.min(durationTime.getDuration().toHours(),
+                                    Math.min(periodEventTypeToPlace.getPeriodDuration().toHours() - hoursAlreadyPlaced, MAX_HOURS_TO_PLACE)));
 
-                // update hours placed for periodtype
-                long totalOfHoursPlaced = hoursAlreadyPlaced + hoursToPlace;
-                hoursPlacedByPeriodEventType.put(periodEventTypeToPlace, totalOfHoursPlaced);
+                    LocalDateTime newStartDateTime = startDateTime.plus(hoursToPlace, ChronoUnit.HOURS);
+                    workSessions.add(new WorkSession(startDateTime.toInstant(ZoneOffset.UTC),
+                            newStartDateTime.toInstant(ZoneOffset.UTC),
+                            periodEventTypeToPlace.getType(),
+                            false)
+                    );
 
-                // remove from periodtype that have hours to place if all has been placed
-                if(totalOfHoursPlaced >= periodEventTypeToPlace.getPeriodDuration().toHours()){
-                    tmpPeriodEventTypes.remove(periodEventTypeToPlace);
-                }
+                    // update hours placed for periodtype
+                    long totalOfHoursPlaced = hoursAlreadyPlaced + hoursToPlace;
+                    hoursPlacedByPeriodEventType.put(periodEventTypeToPlace, totalOfHoursPlaced);
 
-                startDateTime = newStartDateTime.plus(CESURE_BETWEEN_SESSIONS_HOURS, ChronoUnit.HOURS);
-                remainingHoursToPlace -= hoursToPlace;
+                    // remove from periodtype that have hours to place if all has been placed
+                    if (totalOfHoursPlaced >= periodEventTypeToPlace.getPeriodDuration().toHours()) {
+                        tmpPeriodEventTypes.remove(periodEventTypeToPlace);
+                    }
 
-                if(periodEventTypeIndex == tmpPeriodEventTypes.size() -1){
-                    periodEventTypeIndex = 0;
-                } else {
-                    periodEventTypeIndex++;
+                    startDateTime = newStartDateTime.plus(CESURE_BETWEEN_SESSIONS_HOURS, ChronoUnit.HOURS);
+                    remainingHoursToPlace -= hoursToPlace;
+
+                    if (periodEventTypeIndex == tmpPeriodEventTypes.size() - 1) {
+                        periodEventTypeIndex = 0;
+                    } else {
+                        periodEventTypeIndex++;
+                    }
                 }
             }
         }
 
         return workSessions;
+    }
+
+    private Map<PlanningPeriodEventType, Long> initializeHoursAlreadyPlaced(List<PlanningPeriodEventType> periodEventTypes) {
+        Map<PlanningPeriodEventType, Long> hoursAlreadyDone = new HashMap<>();
+
+        for(PlanningPeriodEventType planningPeriodEventType : periodEventTypes){
+            List<WorkSession> doneForTypeInPeriod = workSessionRepository.findDoneBetweenStartInstantAndEndInstant(
+                    period.getStartInstant(), period.getEndInstant(), planningPeriodEventType.getType()
+            );
+
+            long hoursDone = 0;
+            for(WorkSession workSession : doneForTypeInPeriod){
+                hoursDone += Duration.between(workSession.getStartInstant(), workSession.getEndInstant()).toHours();
+            }
+
+            hoursAlreadyDone.put(planningPeriodEventType, hoursDone);
+        }
+
+        return hoursAlreadyDone;
     }
 
     List<DurationTime> calculateAvailablePeriods() {
