@@ -26,6 +26,10 @@ public class DefaultUnavailabilitySession {
     public DefaultUnavailabilitySession() {
     }
 
+    public DefaultUnavailabilitySession(User user) {
+        this.user = user;
+    }
+
     public DefaultUnavailabilitySession(int dayOfWeek, int startHour, Duration duration, User user) {
         this.dayOfWeek = dayOfWeek;
         this.startHour = startHour;

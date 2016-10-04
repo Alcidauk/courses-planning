@@ -1,6 +1,7 @@
 package com.alcidauk.ui.dto;
 
 import com.alcidauk.data.bean.DefaultUnavailabilitySession;
+import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.calendar.CalendarUtils;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
@@ -18,6 +19,9 @@ public class DefaultSessionCalendarBean implements EditableCalendarEvent {
 
     private Date startDate;
     private Date endDate;
+
+    public DefaultSessionCalendarBean() {
+    }
 
     public DefaultSessionCalendarBean(DefaultUnavailabilitySession defaultUnavailabilitySession, Date startDate) {
         this.defaultUnavailabilitySession = defaultUnavailabilitySession;
@@ -60,6 +64,14 @@ public class DefaultSessionCalendarBean implements EditableCalendarEvent {
         defaultUnavailabilitySession.setStartHour(newStartDate.getHour());
         defaultUnavailabilitySession.setDayOfWeek(newStartDate.getDayOfWeek().getValue());
         defaultUnavailabilitySession.setDuration(Duration.between(startDate.toInstant(), endDate.toInstant()));
+    }
+
+    public void createDefaultSession() {
+        if(defaultUnavailabilitySession == null){
+            defaultUnavailabilitySession = new DefaultUnavailabilitySession(CurrentUser.get());
+        }
+
+        updateDefaultSession();
     }
 
     /*

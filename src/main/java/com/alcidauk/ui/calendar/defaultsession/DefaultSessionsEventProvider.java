@@ -4,6 +4,7 @@ import com.alcidauk.data.bean.DefaultUnavailabilitySession;
 import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
 import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.dto.DefaultSessionCalendarBean;
+import com.vaadin.ui.Calendar;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 import org.slf4j.Logger;
@@ -37,6 +38,11 @@ public class DefaultSessionsEventProvider implements CalendarEventProvider {
 
     public void updateSessionBean(DefaultSessionCalendarBean calendarBean){
         calendarBean.updateDefaultSession();
+        defaultUnavailabilitySessionRepository.save(calendarBean.getDefaultUnavailabilitySession());
+    }
+
+    public void createSessionBean(DefaultSessionCalendarBean calendarBean){
+        calendarBean.createDefaultSession();
         defaultUnavailabilitySessionRepository.save(calendarBean.getDefaultUnavailabilitySession());
     }
 }
