@@ -48,20 +48,43 @@ public class SessionGenerator {
         this.now = LocalDateTime.now();
     }
 
-    // TODO finish it when generateWorkSessions is finished. Has to return result
     public List<WorkSession> generateSessions() {
         if(periodEventTypes.isEmpty()){
             return new ArrayList<>();
         }
 
+        cleanExistingSessionsAfterNow();
+
         List<DurationTime> availablePeriods = calculateAvailablePeriods();
 
-        List<WorkSession> generatedWorkSessions = generateWorkSessions(availablePeriods);
-
-        return null;
+        return generateWorkSessions(availablePeriods);
     }
 
-    // TODO finish it => add workSessions while there is place or while there are hours to schedule
+    /**
+     * remove sessions that will be erased by the new generation of sessions between now and the end of the period
+     */
+    private void cleanExistingSessionsAfterNow() {
+        List<WorkSession> sessionsToRemove =
+                workSessionRepository.findBetweenStartInstantAndEndInstant(now.toInstant(ZoneOffset.UTC), period.getEndInstant());
+        workSessionRepository.delete(sessionsToRemove);
+    }
+
+    /**
+     * Generate workSessions after now depending of the number of hours to place per type of worksessions
+     * This generation take in account:
+     *   - the number of hours already done in the period for each session type
+     *   - the "now" value i.e. no sessions are generated before this dateTime
+     *   - a maximum duration of each workSession
+     *   - between every session, a remaining available period
+     *   - turns between session types
+     *     => means that if there are to session type that have hours to place:
+     *       -> the first session will be of type 0
+     *       -> the next one will be of type 1
+     *       -> the next one will be back to type 0
+     *       -> etc.
+     * @param availablePeriods periods where to place sessions
+     * @return a list of generated worksessions
+     */
     List<WorkSession> generateWorkSessions(List<DurationTime> availablePeriods) {
         List<WorkSession> workSessions = new ArrayList<>();
 
@@ -129,6 +152,12 @@ public class SessionGenerator {
         return workSessions;
     }
 
+    /**
+     * Depending on periodEventTypes that are given, take the type of session of each one, and get sessions for the period
+     * and the type. Then subtract hours of these done sessions to remaining hours to place.
+     * @param periodEventTypes the list of types we want to get session type and get done sessions
+     * @return a map that store for each type, the number of hours done in the period
+     */
     private Map<PlanningPeriodEventType, Long> initializeHoursAlreadyPlaced(List<PlanningPeriodEventType> periodEventTypes) {
         Map<PlanningPeriodEventType, Long> hoursAlreadyDone = new HashMap<>();
 
@@ -148,6 +177,11 @@ public class SessionGenerator {
         return hoursAlreadyDone;
     }
 
+    /**
+     * Apply a sort of inverse of a planningPeriod : depending on the unavailable sessions that have been set,
+     * calculate all the remaining periods in the sessions, also called available periods.
+     * @return a list of available periods
+     */
     List<DurationTime> calculateAvailablePeriods() {
         Collections.sort(unavailableWorkSessions, (workSession1, workSession2) ->
                 workSession1.getEndInstant().isBefore(workSession2.getEndInstant()) ? -1 : 1);
