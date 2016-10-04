@@ -2,6 +2,7 @@ package com.alcidauk.ui.calendar.defaultsession;
 
 import com.alcidauk.app.Messages;
 import com.alcidauk.data.repository.DefaultUnavailabilitySessionRepository;
+import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventContextMenuHandler;
 import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventDragHandler;
 import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventMoveHandler;
 import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventResizeHandler;
@@ -50,6 +51,8 @@ public class DefaultSessionSettingsWindow extends Window {
         calendar.setHandler(new DefaultSessionEventMoveHandler());
         calendar.setHandler(new DefaultSessionEventResizeHandler());
         calendar.setHandler(new DefaultSessionEventDragHandler());
+
+        calendar.addActionHandler(new DefaultSessionEventContextMenuHandler());
 
         // avoid changing week
         calendar.setHandler(new BasicBackwardHandler() {

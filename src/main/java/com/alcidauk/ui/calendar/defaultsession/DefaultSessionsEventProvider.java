@@ -45,4 +45,8 @@ public class DefaultSessionsEventProvider implements CalendarEventProvider {
         calendarBean.createDefaultSession();
         defaultUnavailabilitySessionRepository.save(calendarBean.getDefaultUnavailabilitySession());
     }
+
+    public void removeSession(DefaultSessionCalendarBean calendarBean) {
+        defaultUnavailabilitySessionRepository.delete(calendarBean.getDefaultUnavailabilitySession());
+    }
 }
