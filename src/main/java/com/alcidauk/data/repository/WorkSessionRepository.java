@@ -25,6 +25,9 @@ public interface WorkSessionRepository extends JpaRepository<WorkSession, Long> 
 
     List<WorkSession> findByType(WorkSessionType workSessionType);
 
+    @Query("select e from WorkSession e where e.type = ?1 and e.startInstant > ?2 and e.endInstant < ?3")
+    List<WorkSession> findByTypeBetweenStartInstantAndEndInstant(WorkSessionType workSessionType, Instant startInstant, Instant endInstant);
+
     @Query("select e from WorkSession e where e.startInstant > ?1 and e.endInstant < ?2")
     List<WorkSession> findBetweenStartInstantAndEndInstant(Instant startInstant, Instant endInstant);
 

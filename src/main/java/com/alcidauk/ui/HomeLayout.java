@@ -1,6 +1,10 @@
 package com.alcidauk.ui;
 
 import com.alcidauk.app.Messages;
+import com.alcidauk.app.SessionGenerator;
+import com.alcidauk.data.bean.PlanningPeriod;
+import com.alcidauk.data.bean.PlanningPeriodEventType;
+import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.*;
 import com.alcidauk.login.CurrentUser;
@@ -89,8 +93,38 @@ public class HomeLayout extends VerticalLayout {
         });
         chooseHoursButton.setWidth(100, Unit.PERCENTAGE);
 
+        Button generateSessionsButton = new Button(Messages.getMessage("com.alcidauk.courses.planning.generate.sessions.for.period"));
+        generateSessionsButton.addClickListener((Button.ClickListener) clickEvent -> {
+            List<WorkSession> workSessions = new SessionGenerator(
+                    getCurrentPlanningPeriod(),
+                    getUnavailableWorkSessions(),
+                    getPlanningPeriodEventTypes(),
+                    workSessionRepository).generateSessions();
+            workSessionRepository.save(workSessions);
+        });
+        generateSessionsButton.setWidth(100, Unit.PERCENTAGE);
+
         rightLayout.addComponent(chooseHoursButton);
+        rightLayout.addComponent(generateSessionsButton);
         rightLayout.setMargin(true);
+    }
+
+    private PlanningPeriod getCurrentPlanningPeriod(){
+        Instant startInstant = Instant.ofEpochMilli(calendar.getStartDate().getTime());
+        Instant endInstant = Instant.ofEpochMilli(calendar.getEndDate().getTime());
+        return planningPeriodRepository.findByStartInstantAndEndInstantAndUser(startInstant, endInstant, CurrentUser.get());
+    }
+
+    private List<WorkSession> getUnavailableWorkSessions(){
+        Instant startInstant = Instant.ofEpochMilli(calendar.getStartDate().getTime());
+        Instant endInstant = Instant.ofEpochMilli(calendar.getEndDate().getTime());
+
+        return workSessionRepository.findByTypeBetweenStartInstantAndEndInstant(
+                workSessionTypeRepository.findByName("unavailable"), startInstant, endInstant);
+    }
+
+    private List<PlanningPeriodEventType> getPlanningPeriodEventTypes(){
+        return planningPeriodEventTypeRepository.findByNotSystemTypeAndPeriod(getCurrentPlanningPeriod());
     }
 
     private void createCalendar() {
