@@ -9,9 +9,7 @@ import com.vaadin.ui.components.calendar.handler.BasicEventMoveHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.DayOfWeek;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 /**
@@ -33,15 +31,11 @@ public class DefaultSessionEventMoveHandler extends BasicEventMoveHandler {
     protected void setDates(EditableCalendarEvent event, Date start, Date end) {
         DefaultSessionCalendarBean calendarBean = (DefaultSessionCalendarBean) event;
 
-        if(getDayOfWeek(calendarBean.getStart()).equals(getDayOfWeek(start)) &&
-                getDayOfWeek(calendarBean.getEnd()).equals(getDayOfWeek(end))) {
+        if(start.toInstant().isAfter(calendarHandler.getStartDate().toInstant().minus(1, ChronoUnit.MICROS)) &&
+                end.toInstant().isBefore(calendarHandler.getEndDate().toInstant().plus(1, ChronoUnit.MICROS))) {
             super.setDates(event, start, end);
             ((DefaultSessionsEventProvider) calendarHandler.getEventProvider()).updateSessionBean(calendarBean);
         }
-    }
-
-    private DayOfWeek getDayOfWeek(Date start) {
-        return ZonedDateTime.ofInstant(start.toInstant(), ZoneId.systemDefault()).getDayOfWeek();
     }
 
 }

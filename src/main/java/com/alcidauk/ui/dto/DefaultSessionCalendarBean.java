@@ -2,15 +2,11 @@ package com.alcidauk.ui.dto;
 
 import com.alcidauk.data.bean.DefaultUnavailabilitySession;
 import com.alcidauk.ui.calendar.CalendarUtils;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
-import java.time.temporal.WeekFields;
 import java.util.Date;
 
 /**
@@ -60,7 +56,9 @@ public class DefaultSessionCalendarBean implements EditableCalendarEvent {
 
     public void updateDefaultSession() {
         ZonedDateTime newStartDate = startDate.toInstant().atZone(ZoneId.systemDefault());
+
         defaultUnavailabilitySession.setStartHour(newStartDate.getHour());
+        defaultUnavailabilitySession.setDayOfWeek(newStartDate.getDayOfWeek().getValue());
         defaultUnavailabilitySession.setDuration(Duration.between(startDate.toInstant(), endDate.toInstant()));
     }
 
