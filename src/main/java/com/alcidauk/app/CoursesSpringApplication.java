@@ -44,42 +44,14 @@ public class CoursesSpringApplication {
 		return (args) -> {
 			// save a couple of customers
 			User userTitine = new User("Titine", "Totot");
-			User userJohn = new User("John", "Doe");
 
 			repository.save(userTitine);
-			repository.save(userJohn);
 
 			WorkSessionType classes = new WorkSessionType("course", false);
 			WorkSessionType diploma = new WorkSessionType("exam", false);
 			WorkSessionType unavailable = new WorkSessionType("unavailable", true);
 			coursesTypeRepo.save(Arrays.asList(classes, diploma, unavailable));
-
-			workSessionRepository.save(new WorkSession(getInstantFromStringDate("22/08/2016 05:00"), getInstantFromStringDate("22/08/2016 08:00"), classes, true));
-			workSessionRepository.save(new WorkSession(getInstantFromStringDate("24/08/2016 10:00"), getInstantFromStringDate("24/08/2016 18:00"), diploma, true));
-
-			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(1, 7, Duration.ofHours(3), userTitine));
-			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(1, 18, Duration.ofHours(2), userTitine));
-			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(2, 7, Duration.ofHours(3), userJohn));
-			defaultUnavailabilitySessionRepository.save(new DefaultUnavailabilitySession(2, 18, Duration.ofHours(3), userJohn));
 		};
-	}
-
-	private Instant getInstantFromStringDateWithSeconds(String date) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-		TemporalAccessor temporalAccessor = formatter.parse(date);
-		LocalDateTime localDateTime = LocalDateTime.from(temporalAccessor);
-		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
-		Instant it = Instant.from(zonedDateTime);
-		log.info(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(it.atZone(ZoneId.systemDefault())) + " " + it.toEpochMilli());
-		return it;
-	}
-
-	private Instant getInstantFromStringDate(String date) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-		TemporalAccessor temporalAccessor = formatter.parse(date);
-		LocalDateTime localDateTime = LocalDateTime.from(temporalAccessor);
-		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
-		return Instant.from(zonedDateTime);
 	}
 
 	@Bean

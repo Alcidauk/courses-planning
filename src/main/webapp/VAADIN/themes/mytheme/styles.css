@@ -12966,18 +12966,18 @@ div.v-layout.v-horizontal.v-widget {
 	background-color: rgba(200, 200, 200, 0.9);
 }
 
-.mytheme .v-calendar .v-calendar-event-cours .v-calendar-event-caption {
+.mytheme .v-calendar .v-calendar-event-course .v-calendar-event-caption {
 	color: green;
 }
 
-.mytheme .v-calendar .v-calendar-event-cours .v-calendar-event-content {
+.mytheme .v-calendar .v-calendar-event-course .v-calendar-event-content {
 	background-color: rgba(161, 212, 144, 0.8);
 }
 
-.mytheme .v-calendar .v-calendar-event-concours .v-calendar-event-caption {
+.mytheme .v-calendar .v-calendar-event-exam .v-calendar-event-caption {
 	color: red;
 }
 
-.mytheme .v-calendar .v-calendar-event-concours .v-calendar-event-content {
+.mytheme .v-calendar .v-calendar-event-exam .v-calendar-event-content {
 	background-color: rgba(212, 153, 144, 0.8);
 }

@@ -35,8 +35,6 @@ public class WorkSessionCalendar extends Calendar {
 
     public void init() {
         setLocale(Locale.FRENCH);
-        setFirstVisibleHourOfDay(6);
-        setLastVisibleHourOfDay(21);
 
         setHandler(new CalendarComponentEvents.EventClickHandler() {
             public void eventClick(CalendarComponentEvents.EventClick event) {
