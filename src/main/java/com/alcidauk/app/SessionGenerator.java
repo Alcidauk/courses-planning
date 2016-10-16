@@ -65,7 +65,7 @@ public class SessionGenerator {
      */
     private void cleanExistingSessionsAfterNow() {
         List<WorkSession> sessionsToRemove =
-                workSessionRepository.findBetweenStartInstantAndEndInstant(now.toInstant(ZoneOffset.UTC), period.getEndInstant());
+                workSessionRepository.findNotSystemBetweenStartInstantAndEndInstant(now.toInstant(ZoneOffset.UTC), period.getEndInstant());
         workSessionRepository.delete(sessionsToRemove);
     }
 
