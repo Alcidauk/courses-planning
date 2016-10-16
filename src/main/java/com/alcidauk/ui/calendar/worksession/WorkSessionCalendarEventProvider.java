@@ -1,6 +1,9 @@
 package com.alcidauk.ui.calendar.worksession;
 
-import com.alcidauk.data.bean.*;
+import com.alcidauk.data.bean.DefaultUnavailabilitySession;
+import com.alcidauk.data.bean.PlanningPeriod;
+import com.alcidauk.data.bean.WorkSession;
+import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.*;
 import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.CoursesUI;
@@ -63,11 +66,30 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
         }
         firePlanningPeriodChanged();
 
-        if(!planningPeriod.isDefaultSessionsGenerated()){
+        Instant defaultSessionsGenerationDate = planningPeriod.getDefaultSessionsGenerationDate();
+        log.info("Generation date : " + defaultSessionsGenerationDate);
+        boolean periodGeneratedBeforeDefaultSessions = true;
+        if(defaultSessionsGenerationDate != null &&
+                defaultUnavailabilitySessionRepository
+                        .findByUserAndLastModificationGreaterThan(CurrentUser.get(), defaultSessionsGenerationDate).isEmpty() ) {
+            periodGeneratedBeforeDefaultSessions = false;
+        }
+
+        if(periodGeneratedBeforeDefaultSessions){
             WorkSessionType unavailableType = workSessionTypeRepository.findByName("unavailable");
+
+            Instant nowOrStartPeriodInstant = Instant.now();
+            if(nowOrStartPeriodInstant.isBefore(planningPeriod.getStartInstant())){
+                nowOrStartPeriodInstant = planningPeriod.getStartInstant();
+            }
+
+            List<WorkSession> sessionsToRemove = workSessionRepository.findByTypeBetweenStartInstantAndEndInstant(
+                    unavailableType, nowOrStartPeriodInstant, planningPeriod.getEndInstant());
+            workSessionRepository.delete(sessionsToRemove);
+
             generateDefaultSessionsAsEvents(start, unavailableType);
             fireEventChanged(unavailableType);
-            planningPeriod.setDefaultSessionsGenerated(true);
+            planningPeriod.setDefaultSessionsGenerationDate(Instant.now());
             planningPeriodRepository.save(planningPeriod);
         }
 
@@ -77,7 +99,7 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
     }
 
     private PlanningPeriod createPlanningPeriod(Instant startInstant, Instant endInstant) {
-        PlanningPeriod planningPeriod = new PlanningPeriod(startInstant, endInstant, false, CurrentUser.get());
+        PlanningPeriod planningPeriod = new PlanningPeriod(startInstant, endInstant, null, CurrentUser.get());
         planningPeriodRepository.save(planningPeriod);
         return planningPeriod;
     }
@@ -88,8 +110,11 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
             Instant sessionStart = CalendarUtils.getDateInWeek(start, defaultUnavailabilitySession.getDayOfWeek(), defaultUnavailabilitySession.getStartHour());
             Instant sessionEnd = CalendarUtils.getDateInWeek(start, defaultUnavailabilitySession.getDayOfWeek(),
                     defaultUnavailabilitySession.getStartHour(), defaultUnavailabilitySession.getDuration());
-            WorkSession workSession = new WorkSession(sessionStart, sessionEnd, unavailableWorkSessionType, false);
-            workSessionRepository.save(workSession);
+
+            if(sessionStart.isAfter(Instant.now())) {
+                WorkSession workSession = new WorkSession(sessionStart, sessionEnd, unavailableWorkSessionType, false);
+                workSessionRepository.save(workSession);
+            }
         }
     }
 

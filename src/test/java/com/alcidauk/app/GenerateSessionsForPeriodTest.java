@@ -60,7 +60,7 @@ public class GenerateSessionsForPeriodTest {
         diplomaType = new WorkSessionType("diploma", true);
         diplomaType.setId(3L);
 
-        planningPeriod = new PlanningPeriod(startPeriodInstant, endPeriodInstant, false, null);
+        planningPeriod = new PlanningPeriod(startPeriodInstant, endPeriodInstant, null, null);
 
         workSessionRepository = Mockito.mock(WorkSessionRepository.class);
     }

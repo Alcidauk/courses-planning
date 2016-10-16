@@ -6,6 +6,7 @@ import com.alcidauk.ui.calendar.CalendarUtils;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -64,6 +65,8 @@ public class DefaultSessionCalendarBean implements EditableCalendarEvent {
         defaultUnavailabilitySession.setStartHour(newStartDate.getHour());
         defaultUnavailabilitySession.setDayOfWeek(newStartDate.getDayOfWeek().getValue());
         defaultUnavailabilitySession.setDuration(Duration.between(startDate.toInstant(), endDate.toInstant()));
+
+        defaultUnavailabilitySession.setLastModification(Instant.now());
     }
 
     public void createDefaultSession() {

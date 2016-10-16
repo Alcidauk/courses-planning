@@ -22,7 +22,7 @@ public class PlanningPeriod {
     @OneToMany(fetch = FetchType.EAGER)
     private List<PlanningPeriodEventType> planningPeriodEventTypeList;
 
-    private boolean defaultSessionsGenerated;
+    private Instant defaultSessionsGenerationDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
@@ -30,10 +30,10 @@ public class PlanningPeriod {
     public PlanningPeriod() {
     }
 
-    public PlanningPeriod(Instant startInstant, Instant endInstant, boolean defaultSessionsGenerated, User user) {
+    public PlanningPeriod(Instant startInstant, Instant endInstant, Instant defaultSessionsGenerationDate, User user) {
         this.startInstant = startInstant;
         this.endInstant = endInstant;
-        this.defaultSessionsGenerated = defaultSessionsGenerated;
+        this.defaultSessionsGenerationDate = defaultSessionsGenerationDate;
         this.user = user;
     }
 
@@ -69,12 +69,12 @@ public class PlanningPeriod {
         this.planningPeriodEventTypeList = planningPeriodEventTypeList;
     }
 
-    public boolean isDefaultSessionsGenerated() {
-        return defaultSessionsGenerated;
+    public Instant getDefaultSessionsGenerationDate() {
+        return defaultSessionsGenerationDate;
     }
 
-    public void setDefaultSessionsGenerated(boolean defaultSessionsGenerated) {
-        this.defaultSessionsGenerated = defaultSessionsGenerated;
+    public void setDefaultSessionsGenerationDate(Instant defaultSessionsGenerationDate) {
+        this.defaultSessionsGenerationDate = defaultSessionsGenerationDate;
     }
 
     public User getUser() {

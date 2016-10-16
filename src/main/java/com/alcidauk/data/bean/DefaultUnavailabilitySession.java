@@ -3,6 +3,7 @@ package com.alcidauk.data.bean;
 
 import javax.persistence.*;
 import java.time.Duration;
+import java.time.Instant;
 
 /**
  * Created by alcidauk on 20/08/16.
@@ -22,6 +23,8 @@ public class DefaultUnavailabilitySession {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
+
+    private Instant lastModification;
 
     public DefaultUnavailabilitySession() {
     }
@@ -75,5 +78,13 @@ public class DefaultUnavailabilitySession {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Instant getLastModification() {
+        return lastModification;
+    }
+
+    public void setLastModification(Instant lastModification) {
+        this.lastModification = lastModification;
     }
 }

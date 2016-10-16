@@ -5,8 +5,8 @@ import com.alcidauk.data.bean.User;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -17,5 +17,7 @@ import java.util.List;
 public interface DefaultUnavailabilitySessionRepository extends JpaRepository<DefaultUnavailabilitySession, Long> {
 
     List<DefaultUnavailabilitySession> findByUser(User user);
+
+    List<DefaultUnavailabilitySession> findByUserAndLastModificationGreaterThan(User user, Instant greaterThanLastModification);
 
 }
