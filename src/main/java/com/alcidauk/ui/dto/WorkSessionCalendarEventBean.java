@@ -2,14 +2,14 @@ package com.alcidauk.ui.dto;
 
 import com.alcidauk.app.Messages;
 import com.alcidauk.data.bean.WorkSession;
-import com.vaadin.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 import java.util.Date;
 
 /**
  * Created by alcidauk on 23/08/16.
  */
-public class WorkSessionCalendarEventBean implements CalendarEvent {
+public class WorkSessionCalendarEventBean implements EditableCalendarEvent {
 
     private WorkSession workSession;
 
@@ -23,8 +23,36 @@ public class WorkSessionCalendarEventBean implements CalendarEvent {
     }
 
     @Override
+    public void setStart(Date startDate){
+        workSession.setStartInstant(startDate.toInstant());
+    }
+
+    @Override
+    public void setStyleName(String s) {
+    }
+
+    @Override
+    public void setAllDay(boolean b) {
+    }
+
+    @Override
     public Date getEnd() {
         return Date.from(workSession.getEndInstant());
+    }
+
+    @Override
+    public void setCaption(String caption) {
+        workSession.setTitle(caption);
+    }
+
+    @Override
+    public void setDescription(String description) {
+        workSession.setDescription(description);
+    }
+
+    @Override
+    public void setEnd(Date endDate){
+        workSession.setEndInstant(endDate.toInstant());
     }
 
     @Override

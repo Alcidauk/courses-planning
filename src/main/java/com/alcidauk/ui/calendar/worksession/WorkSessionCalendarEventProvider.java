@@ -118,6 +118,10 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
         }
     }
 
+    public void updateWorkSession(WorkSessionCalendarEventBean calendarEventBean){
+        workSessionRepository.save(calendarEventBean.getWorkSession());
+    }
+
     private void firePlanningPeriodChanged() {
         for(ShownPlanningPeriodListener listener :  ((CoursesUI) UI.getCurrent()).getShownPlanningPeriodChangedListeners()){
             listener.update(new ShowPlanningPeriodChangedEvent(calendar, planningPeriod));

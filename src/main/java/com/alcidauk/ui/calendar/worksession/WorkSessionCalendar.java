@@ -1,6 +1,7 @@
 package com.alcidauk.ui.calendar.worksession;
 
 import com.alcidauk.data.repository.*;
+import com.alcidauk.ui.calendar.worksession.handlers.WorkSessionEventResizeHandler;
 import com.alcidauk.ui.dto.WorkSessionCalendarEventBean;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.VaadinSessionScope;
@@ -46,6 +47,8 @@ public class WorkSessionCalendar extends Calendar {
                 workSessionSettingsWindow.center();
             }
         });
+
+        setHandler(new WorkSessionEventResizeHandler());
 
         setEventProvider(new WorkSessionCalendarEventProvider(workSessionRepository, planningPeriodRepository,
                 defaultUnavailabilitySessionRepository, workSessionTypeRepository, userRepository, this));
