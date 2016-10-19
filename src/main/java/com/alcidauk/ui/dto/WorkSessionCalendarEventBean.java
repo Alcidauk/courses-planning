@@ -13,6 +13,10 @@ public class WorkSessionCalendarEventBean implements EditableCalendarEvent {
 
     private WorkSession workSession;
 
+    public WorkSessionCalendarEventBean() {
+        workSession = new WorkSession();
+    }
+
     public WorkSessionCalendarEventBean(WorkSession workSession) {
         this.workSession = workSession;
     }

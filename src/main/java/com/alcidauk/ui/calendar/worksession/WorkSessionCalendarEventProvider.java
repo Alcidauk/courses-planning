@@ -120,6 +120,12 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
 
     public void updateWorkSession(WorkSessionCalendarEventBean calendarEventBean){
         workSessionRepository.save(calendarEventBean.getWorkSession());
+        firePlanningPeriodChanged();
+    }
+
+    public void removeSession(WorkSessionCalendarEventBean sessionToRemove) {
+        workSessionRepository.delete(sessionToRemove.getWorkSession());
+        firePlanningPeriodChanged();
     }
 
     private void firePlanningPeriodChanged() {

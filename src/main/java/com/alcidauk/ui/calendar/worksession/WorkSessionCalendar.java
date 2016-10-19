@@ -1,6 +1,8 @@
 package com.alcidauk.ui.calendar.worksession;
 
 import com.alcidauk.data.repository.*;
+import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventContextMenuHandler;
+import com.alcidauk.ui.calendar.worksession.handlers.WorkSessionEventContextMenuHandler;
 import com.alcidauk.ui.calendar.worksession.handlers.WorkSessionEventMoveHandler;
 import com.alcidauk.ui.calendar.worksession.handlers.WorkSessionEventResizeHandler;
 import com.alcidauk.ui.dto.WorkSessionCalendarEventBean;
@@ -51,6 +53,8 @@ public class WorkSessionCalendar extends Calendar {
 
         setHandler(new WorkSessionEventResizeHandler());
         setHandler(new WorkSessionEventMoveHandler());
+
+        addActionHandler(new WorkSessionEventContextMenuHandler());
 
         setEventProvider(new WorkSessionCalendarEventProvider(workSessionRepository, planningPeriodRepository,
                 defaultUnavailabilitySessionRepository, workSessionTypeRepository, userRepository, this));
