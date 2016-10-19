@@ -135,6 +135,7 @@ public class SessionGenerator {
                     // remove from periodtype that have hours to place if all has been placed
                     if (totalOfHoursPlaced >= periodEventTypeToPlace.getPeriodDuration().toHours()) {
                         tmpPeriodEventTypes.remove(periodEventTypeToPlace);
+                        periodEventTypeIndex--;
                     }
 
                     startDateTime = newStartDateTime.plus(CESURE_BETWEEN_SESSIONS_HOURS, ChronoUnit.HOURS);
