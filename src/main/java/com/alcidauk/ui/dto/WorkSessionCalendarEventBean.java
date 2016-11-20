@@ -1,7 +1,9 @@
 package com.alcidauk.ui.dto;
 
 import com.alcidauk.app.Messages;
+import com.alcidauk.data.bean.DefaultUnavailabilitySession;
 import com.alcidauk.data.bean.WorkSession;
+import com.alcidauk.login.CurrentUser;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 import java.util.Date;
@@ -61,9 +63,13 @@ public class WorkSessionCalendarEventBean implements EditableCalendarEvent {
 
     @Override
     public String getCaption() {
-        String workSessionType = Messages.getWorkSessionTypeNameMessage(workSession.getType().getName());
-        return workSession.getTitle() != null ?
-                String.format("%s : %s", workSessionType, workSession.getTitle()) : workSessionType;
+        if(workSession.getType() != null) {
+            String workSessionType = Messages.getWorkSessionTypeNameMessage(workSession.getType().getName());
+
+            return workSession.getTitle() != null ?
+                    String.format("%s : %s", workSessionType, workSession.getTitle()) : workSessionType;
+        }
+        return null;
     }
 
     @Override
@@ -73,7 +79,7 @@ public class WorkSessionCalendarEventBean implements EditableCalendarEvent {
 
     @Override
     public String getStyleName() {
-        return workSession.getType().getName();
+        return workSession.getType() != null ? workSession.getType().getName() : null;
     }
 
     @Override
@@ -93,4 +99,9 @@ public class WorkSessionCalendarEventBean implements EditableCalendarEvent {
         workSession.setDone(done);
     }
 
+    public void createWorkSession() {
+        if(workSession == null){
+            workSession = new WorkSession();
+        }
+    }
 }

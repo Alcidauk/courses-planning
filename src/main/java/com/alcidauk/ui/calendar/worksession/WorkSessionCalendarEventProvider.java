@@ -139,4 +139,13 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
             listener.update(new WorkSessionTypeUpdatedEvent(calendar, unavailableType));
         }
     }
+
+    public void createSessionBean(WorkSessionCalendarEventBean workSessionBean) {
+        workSessionBean.createWorkSession();
+        workSessionRepository.save(workSessionBean.getWorkSession());
+    }
+
+    public WorkSessionRepository getWorkSessionRepository() {
+        return workSessionRepository;
+    }
 }
