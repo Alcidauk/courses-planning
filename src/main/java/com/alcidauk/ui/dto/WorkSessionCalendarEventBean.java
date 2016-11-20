@@ -61,8 +61,9 @@ public class WorkSessionCalendarEventBean implements EditableCalendarEvent {
 
     @Override
     public String getCaption() {
+        String workSessionType = Messages.getWorkSessionTypeNameMessage(workSession.getType().getName());
         return workSession.getTitle() != null ?
-                workSession.getTitle() : Messages.getWorkSessionTypeNameMessage(workSession.getType().getName());
+                String.format("%s : %s", workSessionType, workSession.getTitle()) : workSessionType;
     }
 
     @Override

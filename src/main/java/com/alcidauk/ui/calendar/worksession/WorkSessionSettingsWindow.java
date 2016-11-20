@@ -25,6 +25,7 @@ public class WorkSessionSettingsWindow extends Window {
     private WorkSessionRepository workSessionRepository;
 
     private CheckBox doneCheck;
+    private TextField titleField;
     private TextArea descriptionTxt;
 
     private FieldGroup calendarEventFieldGroup;
@@ -41,11 +42,31 @@ public class WorkSessionSettingsWindow extends Window {
         doneCheck = new CheckBox(Messages.getMessage("com.alcidauk.courses.planning.work.session.done"));
 
         descriptionTxt = new TextArea(Messages.getMessage("com.alcidauk.courses.planning.work.session.description") + " :");
+        titleField = new TextField(Messages.getMessage("com.alcidauk.courses.planning.work.session.title") + " :");
 
         calendarEventFieldGroup = new BeanFieldGroup<>(WorkSession.class);
-        calendarEventFieldGroup.bind(doneCheck, "done");
+        calendarEventFieldGroup.bind(titleField, "caption");
         calendarEventFieldGroup.bind(descriptionTxt, "description");
+        calendarEventFieldGroup.bind(doneCheck, "done");
         calendarEventFieldGroup.setItemDataSource(new BeanItem<>(workSessionCalendarEventBean));
+
+        titleField.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
+            try {
+                calendarEventFieldGroup.commit();
+            } catch (FieldGroup.CommitException e) {
+                Notification.show("error");
+            }
+            workSessionRepository.save(workSessionCalendarEventBean.getWorkSession());
+        });
+
+        descriptionTxt.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
+            try {
+                calendarEventFieldGroup.commit();
+            } catch (FieldGroup.CommitException e) {
+                Notification.show("error");
+            }
+            workSessionRepository.save(workSessionCalendarEventBean.getWorkSession());
+        });
 
         doneCheck.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
             try {
@@ -58,6 +79,8 @@ public class WorkSessionSettingsWindow extends Window {
             workSessionRepository.save(workSessionCalendarEventBean.getWorkSession());
         });
 
+        subContent.addComponent(titleField);
+        subContent.addComponent(descriptionTxt);
         subContent.addComponent(doneCheck);
 
         setCaption(workSessionCalendarEventBean.getCaption());
