@@ -2,6 +2,7 @@ package com.alcidauk.ui;
 
 import com.alcidauk.data.repository.UserRepository;
 import com.alcidauk.login.AccessControl;
+import com.alcidauk.ui.calendar.worksession.ExternalWorkSessionChangeListener;
 import com.alcidauk.ui.calendar.worksession.ShownPlanningPeriodListener;
 import com.alcidauk.ui.calendar.worksession.WorkSessionTypeListener;
 import com.ejt.vaadin.loginform.DefaultVerticalLoginForm;
@@ -31,6 +32,7 @@ public class CoursesUI extends UI {
 
     private List<WorkSessionTypeListener> workSessionTypeListeners;
     private List<ShownPlanningPeriodListener> shownPlanningPeriodListeners;
+    private List<ExternalWorkSessionChangeListener> externalWorkSessionChangeListeners;
 
     @Autowired
     private UserRepository userRepository;
@@ -45,6 +47,7 @@ public class CoursesUI extends UI {
 
         workSessionTypeListeners = new ArrayList<>();
         shownPlanningPeriodListeners = new ArrayList<>();
+        externalWorkSessionChangeListeners = new ArrayList<>();
 
         if (!accessControl.isUserSignedIn()) {
             DefaultVerticalLoginForm loginForm = new DefaultVerticalLoginForm();
@@ -87,5 +90,13 @@ public class CoursesUI extends UI {
 
     public void addShownPlanningPeriodListeners(ShownPlanningPeriodListener listener){
         shownPlanningPeriodListeners.add(listener);
+    }
+
+    public List<ExternalWorkSessionChangeListener> getExternalWorkSessionChangeListeners() {
+        return externalWorkSessionChangeListeners;
+    }
+
+    public void addExternalWorkSessionChangeListeners(ExternalWorkSessionChangeListener listener){
+        externalWorkSessionChangeListeners.add(listener);
     }
 }

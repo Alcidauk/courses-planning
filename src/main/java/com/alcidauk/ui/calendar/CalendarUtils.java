@@ -12,6 +12,14 @@ import java.util.Date;
  */
 public class CalendarUtils {
 
+    public static boolean isAfterOrEqual(Instant instant, Instant compared) {
+        return instant.isAfter(compared) || instant.equals(compared);
+    }
+
+    public static boolean isBeforeOrEqual(Instant instant, Instant compared) {
+        return instant.isAfter(compared) || instant.equals(compared);
+    }
+
     public static Instant getDateInWeek(Date randomDateInWeek, int dayOfWeek, int startHour) {
         ZonedDateTime zonedDate = getZonedDateTimeInWeek(randomDateInWeek, dayOfWeek, startHour);
         return zonedDate.toInstant();

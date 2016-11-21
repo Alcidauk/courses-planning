@@ -1,6 +1,8 @@
 package com.alcidauk.ui.calendar.worksession;
 
 import com.alcidauk.data.repository.*;
+import com.alcidauk.ui.CoursesUI;
+import com.alcidauk.ui.calendar.CalendarUtils;
 import com.alcidauk.ui.calendar.defaultsession.handlers.DefaultSessionEventContextMenuHandler;
 import com.alcidauk.ui.calendar.worksession.handlers.WorkSessionEventContextMenuHandler;
 import com.alcidauk.ui.calendar.worksession.handlers.WorkSessionEventDragHandler;
@@ -21,7 +23,7 @@ import java.util.Locale;
  */
 @SpringComponent
 @VaadinSessionScope
-public class WorkSessionCalendar extends Calendar {
+public class WorkSessionCalendar extends Calendar implements ExternalWorkSessionChangeListener {
 
     @Autowired
     private WorkSessionRepository workSessionRepository;
@@ -64,5 +66,15 @@ public class WorkSessionCalendar extends Calendar {
 
         setHeight(100, Unit.PERCENTAGE);
         addStyleName("calendar");
+
+        ((CoursesUI) UI.getCurrent()).addExternalWorkSessionChangeListeners(this);
+    }
+
+    @Override
+    public void update(FromExternalWorkSessionUpdatedEvent fromExternalWorkSessionUpdatedEvent) {
+        if(CalendarUtils.isAfterOrEqual(fromExternalWorkSessionUpdatedEvent.getStartInstant(), getStartDate().toInstant())  &&
+                CalendarUtils.isBeforeOrEqual(fromExternalWorkSessionUpdatedEvent.getEndInstant(), getEndDate().toInstant())) {
+            markAsDirty();
+        }
     }
 }

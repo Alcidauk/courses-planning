@@ -71,6 +71,7 @@ public class WorkSessionSettingsWindow extends Window {
         titleField.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
             try {
                 calendarEventFieldGroup.commit();
+                fireExternalWorkSessionEventChanged();
             } catch (FieldGroup.CommitException e) {
                 Notification.show("error");
             }
@@ -89,8 +90,7 @@ public class WorkSessionSettingsWindow extends Window {
         doneCheck.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
             try {
                 calendarEventFieldGroup.commit();
-                fireEventChanged();
-                fireClose();
+                fireWorkSessionTypeCountEventChanged();
             } catch (FieldGroup.CommitException e) {
                 Notification.show("error");
             }
@@ -100,7 +100,8 @@ public class WorkSessionSettingsWindow extends Window {
         sessionTypeCombo.addValueChangeListener((Property.ValueChangeListener) valueChangeEvent -> {
             try {
                 calendarEventFieldGroup.commit();
-                fireEventChanged();
+                fireWorkSessionTypeCountEventChanged();
+                fireExternalWorkSessionEventChanged();
                 fireClose();
             } catch (FieldGroup.CommitException e) {
                 Notification.show("error");
@@ -118,9 +119,17 @@ public class WorkSessionSettingsWindow extends Window {
         setContent(subContent);
     }
 
-    private void fireEventChanged() {
+    private void fireWorkSessionTypeCountEventChanged() {
         for(WorkSessionTypeListener listener :  ((CoursesUI) UI.getCurrent()).getWorkSessionTypeListeners()){
             listener.update(new WorkSessionTypeUpdatedEvent(this, workSessionCalendarEventBean.getWorkSession().getType()));
+        }
+    }
+
+    private void fireExternalWorkSessionEventChanged() {
+        for(ExternalWorkSessionChangeListener listener :  ((CoursesUI) UI.getCurrent()).getExternalWorkSessionChangeListeners()){
+            listener.update(new FromExternalWorkSessionUpdatedEvent(this,
+                    workSessionCalendarEventBean.getWorkSession().getStartInstant(),
+                    workSessionCalendarEventBean.getWorkSession().getEndInstant()));
         }
     }
 }

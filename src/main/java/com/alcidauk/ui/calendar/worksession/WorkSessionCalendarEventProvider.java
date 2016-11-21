@@ -54,10 +54,7 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
 
     @Override
     public List<CalendarEvent> getEvents(Date start, Date end) {
-        planningPeriod = planningPeriodRepository.findByStartInstantAndEndInstantAndUser(
-                Instant.ofEpochSecond(start.toInstant().getEpochSecond()),
-                Instant.ofEpochSecond(end.toInstant().getEpochSecond()),
-                CurrentUser.get());
+        planningPeriod = getCurrentPlanningPeriod(start, end);
 
         if(planningPeriod == null){
             log.info(String.format("Creating planning period for dates %s to %s.", start.toString(), end.toString()));
@@ -96,6 +93,13 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
         List<WorkSession> workSessions = workSessionRepository.findBetweenStartInstantAndEndInstant(start.toInstant(), end.toInstant());
         log.info(workSessions.size() + "found !");
         return workSessions.stream().map(WorkSessionCalendarEventBean::new).collect(Collectors.toList());
+    }
+
+    public PlanningPeriod getCurrentPlanningPeriod(Date start, Date end) {
+        return planningPeriodRepository.findByStartInstantAndEndInstantAndUser(
+                Instant.ofEpochSecond(start.toInstant().getEpochSecond()),
+                Instant.ofEpochSecond(end.toInstant().getEpochSecond()),
+                CurrentUser.get());
     }
 
     private PlanningPeriod createPlanningPeriod(Instant startInstant, Instant endInstant) {

@@ -45,7 +45,8 @@ public class DefaultSessionSettingsWindow extends Window {
         // set empty string to avoid showing date, except day of week
         calendar.setWeeklyCaptionFormat("");
 
-        DefaultSessionsEventProvider calendarProvider = new DefaultSessionsEventProvider(defaultUnavailabilitySessionRepository, calendar.getStartDate());
+        DefaultSessionsEventProvider calendarProvider = new DefaultSessionsEventProvider(defaultUnavailabilitySessionRepository,
+                calendar.getStartDate(), calendar);
         calendar.setEventProvider(calendarProvider);
 
         calendar.setHandler(new DefaultSessionEventMoveHandler());

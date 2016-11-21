@@ -9,6 +9,8 @@ import com.alcidauk.data.bean.WorkSessionType;
 import com.alcidauk.data.repository.*;
 import com.alcidauk.login.CurrentUser;
 import com.alcidauk.ui.calendar.defaultsession.DefaultSessionSettingsWindow;
+import com.alcidauk.ui.calendar.worksession.ExternalWorkSessionChangeListener;
+import com.alcidauk.ui.calendar.worksession.FromExternalWorkSessionUpdatedEvent;
 import com.alcidauk.ui.calendar.worksession.WorkSessionCalendar;
 import com.alcidauk.ui.calendar.worksession.WorkSessionTypeInPeriodLayout;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -95,12 +97,14 @@ public class HomeLayout extends VerticalLayout {
 
         Button generateSessionsButton = new Button(Messages.getMessage("com.alcidauk.courses.planning.generate.sessions.for.period"));
         generateSessionsButton.addClickListener((Button.ClickListener) clickEvent -> {
+            PlanningPeriod currentPlanningPeriod = getCurrentPlanningPeriod();
             List<WorkSession> workSessions = new SessionGenerator(
-                    getCurrentPlanningPeriod(),
+                    currentPlanningPeriod,
                     getUnavailableWorkSessions(),
                     getPlanningPeriodEventTypes(),
                     workSessionRepository).generateSessions();
             workSessionRepository.save(workSessions);
+            fireExternalWorkSessionEventChanged(currentPlanningPeriod.getStartInstant(), currentPlanningPeriod.getEndInstant());
         });
         generateSessionsButton.setWidth(100, Unit.PERCENTAGE);
 
@@ -188,16 +192,9 @@ public class HomeLayout extends VerticalLayout {
         getUI().getPage().reload();
     }
 
-/*    protected void init() {
-        saveButton.addClickListener(this::save);
+    private void fireExternalWorkSessionEventChanged(Instant startInstant, Instant endInstant) {
+        for(ExternalWorkSessionChangeListener listener :  ((CoursesUI) UI.getCurrent()).getExternalWorkSessionChangeListeners()){
+            listener.update(new FromExternalWorkSessionUpdatedEvent(this, startInstant, endInstant));
+        }
     }
-
-    void showChangesSaved() { // UI update method
-        // Show a notification, make a label visible, etc.
-    }
-
-    void save(Button.ClickEvent event) { // UI logic method
-        backend.save();
-        showChangesSaved();
-    }*/
 }
