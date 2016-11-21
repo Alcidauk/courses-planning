@@ -24,7 +24,8 @@ public class WorkSessionEventDragHandler implements CalendarComponentEvents.Rang
         calendarEvent.setStart(rangeSelectEvent.getStart());
         calendarEvent.setEnd(rangeSelectEvent.getEnd());
 
-        WorkSessionSettingsWindow workSessionSettingsWindow = new WorkSessionSettingsWindow(eventProvider.getWorkSessionRepository(), calendarEvent);
+        WorkSessionSettingsWindow workSessionSettingsWindow =
+                new WorkSessionSettingsWindow(calendarEvent, eventProvider.getWorkSessionRepository(), eventProvider.getWorkSessionTypeRepository());
 
         workSessionSettingsWindow.init();
 

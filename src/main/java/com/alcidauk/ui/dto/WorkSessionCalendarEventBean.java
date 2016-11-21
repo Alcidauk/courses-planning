@@ -1,9 +1,8 @@
 package com.alcidauk.ui.dto;
 
 import com.alcidauk.app.Messages;
-import com.alcidauk.data.bean.DefaultUnavailabilitySession;
 import com.alcidauk.data.bean.WorkSession;
-import com.alcidauk.login.CurrentUser;
+import com.alcidauk.data.bean.WorkSessionType;
 import com.vaadin.ui.components.calendar.event.EditableCalendarEvent;
 
 import java.util.Date;
@@ -97,6 +96,14 @@ public class WorkSessionCalendarEventBean implements EditableCalendarEvent {
 
     public void setDone(boolean done){
         workSession.setDone(done);
+    }
+
+    public WorkSessionType getType(){
+        return workSession.getType();
+    }
+
+    public void setType(WorkSessionType type){
+        workSession.setType(type);
     }
 
     public void createWorkSession() {

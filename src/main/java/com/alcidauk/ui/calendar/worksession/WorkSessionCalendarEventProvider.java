@@ -148,4 +148,8 @@ public class WorkSessionCalendarEventProvider implements CalendarEventProvider {
     public WorkSessionRepository getWorkSessionRepository() {
         return workSessionRepository;
     }
+
+    public WorkSessionTypeRepository getWorkSessionTypeRepository() {
+        return workSessionTypeRepository;
+    }
 }

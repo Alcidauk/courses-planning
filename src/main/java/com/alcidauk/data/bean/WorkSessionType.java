@@ -1,6 +1,8 @@
 package com.alcidauk.data.bean;
 
 
+import com.alcidauk.app.Messages;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -60,5 +62,9 @@ public class WorkSessionType {
 
     public void setSystem(boolean system) {
         this.system = system;
+    }
+
+    public String getI18Name(){
+        return Messages.getWorkSessionTypeNameMessage(getName());
     }
 }

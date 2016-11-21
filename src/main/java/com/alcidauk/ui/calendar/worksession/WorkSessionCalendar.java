@@ -44,7 +44,8 @@ public class WorkSessionCalendar extends Calendar {
         setHandler(new CalendarComponentEvents.EventClickHandler() {
             public void eventClick(CalendarComponentEvents.EventClick event) {
                 WorkSessionSettingsWindow workSessionSettingsWindow =
-                        new WorkSessionSettingsWindow(workSessionRepository, (WorkSessionCalendarEventBean) event.getCalendarEvent());
+                        new WorkSessionSettingsWindow((WorkSessionCalendarEventBean) event.getCalendarEvent(),
+                                workSessionRepository, workSessionTypeRepository);
                 workSessionSettingsWindow.init();
 
                 UI.getCurrent().addWindow(workSessionSettingsWindow);
