@@ -23,7 +23,7 @@ import java.util.Locale;
  * Created by alcidauk on 20/08/16.
  */
 @Theme("mytheme")
-@SpringUI(path = "")
+@SpringUI(path = "/*")
 @Widgetset("com.alcidauk.MyAppWidgetset")
 public class CoursesUI extends UI {
 
