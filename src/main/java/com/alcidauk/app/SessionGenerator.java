@@ -5,10 +5,8 @@ import com.alcidauk.data.bean.PlanningPeriodEventType;
 import com.alcidauk.data.bean.WorkSession;
 import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.ui.calendar.CalendarUtils;
-import com.vaadin.ui.UI;
 
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
@@ -31,18 +29,14 @@ public class SessionGenerator {
 
     private LocalDateTime now;
 
-    private int timezoneMillisOffest;
-
     public SessionGenerator(PlanningPeriod period, List<WorkSession> unavailableWorkSessions,
-                            List<PlanningPeriodEventType> periodEventTypes,
-                            WorkSessionRepository workSessionRepository,
-                            LocalDateTime now, int timezoneMillisOffest) {
+                            List<PlanningPeriodEventType> periodEventTypes, WorkSessionRepository workSessionRepository,
+                            LocalDateTime now) {
         this.period = period;
         this.unavailableWorkSessions = unavailableWorkSessions;
         this.periodEventTypes = periodEventTypes;
         this.workSessionRepository = workSessionRepository;
         this.now = now;
-        this.timezoneMillisOffest = timezoneMillisOffest;
     }
 
     public SessionGenerator(PlanningPeriod period, List<WorkSession> unavailableWorkSessions,
@@ -51,8 +45,7 @@ public class SessionGenerator {
         this.unavailableWorkSessions = unavailableWorkSessions;
         this.periodEventTypes = periodEventTypes;
         this.workSessionRepository = workSessionRepository;
-        this.timezoneMillisOffest = UI.getCurrent().getPage().getWebBrowser().getRawTimezoneOffset();
-        this.now = getLocalDateTimeFromInstant(Instant.now());
+        this.now = LocalDateTime.now();
     }
 
     public List<WorkSession> generateSessions() {
@@ -72,7 +65,7 @@ public class SessionGenerator {
      */
     private void cleanExistingSessionsAfterNow() {
         List<WorkSession> sessionsToRemove =
-                workSessionRepository.findNotSystemBetweenStartInstantAndEndInstant(getInstantFromLocalDateTime(now), period.getEndInstant());
+                workSessionRepository.findNotSystemBetweenStartInstantAndEndInstant(now.toInstant(ZoneOffset.UTC), period.getEndInstant());
         workSessionRepository.delete(sessionsToRemove);
     }
 
@@ -198,13 +191,13 @@ public class SessionGenerator {
         if(unavailableWorkSessions.size() == 0 || unavailableWorkSessions.get(0).getStartInstant() != period.getStartInstant()){
             LocalDateTime endOfPeriod;
             if(unavailableWorkSessions.size() == 0){
-                endOfPeriod = getLocalDateTimeFromInstant(period.getEndInstant());
+                endOfPeriod = CalendarUtils.getLocalDateTimeFromInstant(period.getEndInstant());
             } else {
-                endOfPeriod = getLocalDateTimeFromInstant(unavailableWorkSessions.get(0).getStartInstant());
+                endOfPeriod = CalendarUtils.getLocalDateTimeFromInstant(unavailableWorkSessions.get(0).getStartInstant());
             }
 
             availablePeriods.add(new DurationTime(
-                    getLocalDateTimeFromInstant(period.getStartInstant()),
+                    CalendarUtils.getLocalDateTimeFromInstant(period.getStartInstant()),
                     endOfPeriod
             ));
         }
@@ -212,12 +205,12 @@ public class SessionGenerator {
         for(WorkSession workSession : unavailableWorkSessions){
             int nextIndex = unavailableWorkSessions.indexOf(workSession) + 1;
 
-            LocalDateTime firstDate = getLocalDateTimeFromInstant(workSession.getEndInstant());
+            LocalDateTime firstDate = CalendarUtils.getLocalDateTimeFromInstant(workSession.getEndInstant());
             LocalDateTime secondDate;
             if(nextIndex < unavailableWorkSessions.size()) {
-                secondDate = getLocalDateTimeFromInstant(unavailableWorkSessions.get(nextIndex).getStartInstant());
+                secondDate = CalendarUtils.getLocalDateTimeFromInstant(unavailableWorkSessions.get(nextIndex).getStartInstant());
             } else {
-                secondDate = getLocalDateTimeFromInstant(period.getEndInstant());
+                secondDate = CalendarUtils.getLocalDateTimeFromInstant(period.getEndInstant());
             }
 
             DurationTime availableDurationTimeToAdd = getDurationWithDateIfNonZero(firstDate, secondDate);
@@ -233,13 +226,5 @@ public class SessionGenerator {
             return new DurationTime(firstDate, secondDate);
         }
         return null;
-    }
-
-    private LocalDateTime getLocalDateTimeFromInstant(Instant instant){
-        return CalendarUtils.getLocalDateTimeFromInstant(instant, timezoneMillisOffest);
-    }
-
-    private Instant getInstantFromLocalDateTime(LocalDateTime localDateTime){
-        return CalendarUtils.getInstantFromLocalDateTime(localDateTime, timezoneMillisOffest);
     }
 }

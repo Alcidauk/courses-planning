@@ -77,8 +77,7 @@ public class GenerateSessionsForPeriodTest {
     @Test
     public void testNoSessionsToPlanGeneration(){
         withNoSessionsDone();
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), new ArrayList<>(),
-                workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), new ArrayList<>(), workSessionRepository, oldNow);
         assertEquals(new ArrayList<>(), sessionGenerator.generateSessions());
     }
 
@@ -89,8 +88,7 @@ public class GenerateSessionsForPeriodTest {
                 new PlanningPeriodEventType(Duration.ofHours(10), coursesType, planningPeriod)
         ));
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), planningPeriodEventTypes, workSessionRepository, oldNow);
         assertEquals(new ArrayList<>(), sessionGenerator.generateWorkSessions(new ArrayList<>()));
     }
 
@@ -102,8 +100,7 @@ public class GenerateSessionsForPeriodTest {
                 new DurationTime(now, now.plus(3, ChronoUnit.HOURS))
         );
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), new ArrayList<>(),
-                workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), new ArrayList<>(), workSessionRepository, oldNow);
         assertEquals(new ArrayList<>(), sessionGenerator.generateWorkSessions(availableSessions));
     }
 
@@ -119,8 +116,7 @@ public class GenerateSessionsForPeriodTest {
                 new PlanningPeriodEventType(Duration.ofHours(10), coursesType, planningPeriod)
         );
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), planningPeriodEventTypes, workSessionRepository, oldNow);
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
         assertEquals(1, workSessionsGenerated.size());
         assertEquals(now.toInstant(ZoneOffset.UTC), workSessionsGenerated.get(0).getStartInstant());
@@ -139,8 +135,7 @@ public class GenerateSessionsForPeriodTest {
                 new PlanningPeriodEventType(Duration.ofHours(10), coursesType, planningPeriod)
         );
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), planningPeriodEventTypes, workSessionRepository, oldNow);
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(1, workSessionsGenerated.size());
@@ -161,7 +156,7 @@ public class GenerateSessionsForPeriodTest {
         );
 
         SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, now.plus(1, ChronoUnit.HOURS), 0);
+                planningPeriodEventTypes, workSessionRepository, now.plus(1, ChronoUnit.HOURS));
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(1, workSessionsGenerated.size());
@@ -181,8 +176,7 @@ public class GenerateSessionsForPeriodTest {
                 new PlanningPeriodEventType(Duration.ofHours(10), coursesType, planningPeriod)
         );
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), planningPeriodEventTypes, workSessionRepository, oldNow);
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(2, workSessionsGenerated.size());
@@ -207,8 +201,7 @@ public class GenerateSessionsForPeriodTest {
                 new PlanningPeriodEventType(Duration.ofHours(10), diplomaType, planningPeriod)
         );
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), planningPeriodEventTypes, workSessionRepository, oldNow);
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(2, workSessionsGenerated.size());
@@ -235,8 +228,7 @@ public class GenerateSessionsForPeriodTest {
                 new PlanningPeriodEventType(Duration.ofHours(10), coursesType, planningPeriod)
         );
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), planningPeriodEventTypes, workSessionRepository, oldNow);
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(2, workSessionsGenerated.size());
@@ -264,8 +256,7 @@ public class GenerateSessionsForPeriodTest {
                 new PlanningPeriodEventType(Duration.ofHours(10), diplomaType, planningPeriod)
         );
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), planningPeriodEventTypes, workSessionRepository, oldNow);
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(2, workSessionsGenerated.size());
@@ -294,7 +285,7 @@ public class GenerateSessionsForPeriodTest {
         );
 
         SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, todayMidnight.plus(4, ChronoUnit.HOURS), 0);
+                planningPeriodEventTypes, workSessionRepository, todayMidnight.plus(4, ChronoUnit.HOURS));
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(2, workSessionsGenerated.size());
@@ -320,8 +311,7 @@ public class GenerateSessionsForPeriodTest {
                 new PlanningPeriodEventType(Duration.ofHours(2), coursesType, planningPeriod)
         );
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), planningPeriodEventTypes, workSessionRepository, oldNow);
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(1, workSessionsGenerated.size());
@@ -343,8 +333,7 @@ public class GenerateSessionsForPeriodTest {
                 new PlanningPeriodEventType(Duration.ofHours(8), coursesType, planningPeriod)
         );
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(), planningPeriodEventTypes, workSessionRepository, oldNow);
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(2, workSessionsGenerated.size());
@@ -371,7 +360,7 @@ public class GenerateSessionsForPeriodTest {
         );
 
         SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, todayMidnight.plus(10, ChronoUnit.HOURS), 0);
+                planningPeriodEventTypes, workSessionRepository, todayMidnight.plus(10, ChronoUnit.HOURS));
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(1, workSessionsGenerated.size());
@@ -394,7 +383,7 @@ public class GenerateSessionsForPeriodTest {
         );
 
         SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, todayMidnight.plus(10, ChronoUnit.HOURS), 0);
+                planningPeriodEventTypes, workSessionRepository, todayMidnight.plus(10, ChronoUnit.HOURS));
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(2, workSessionsGenerated.size());
@@ -432,7 +421,7 @@ public class GenerateSessionsForPeriodTest {
         );
 
         SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, todayMidnight.plus(10, ChronoUnit.HOURS), 0);
+                planningPeriodEventTypes, workSessionRepository, todayMidnight.plus(10, ChronoUnit.HOURS));
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(0, workSessionsGenerated.size());
@@ -462,7 +451,7 @@ public class GenerateSessionsForPeriodTest {
         );
 
         SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, new ArrayList<>(),
-                planningPeriodEventTypes, workSessionRepository, todayMidnight.plus(10, ChronoUnit.HOURS), 0);
+                planningPeriodEventTypes, workSessionRepository, todayMidnight.plus(10, ChronoUnit.HOURS));
         List<WorkSession> workSessionsGenerated = sessionGenerator.generateWorkSessions(availableSessions);
 
         assertEquals(2, workSessionsGenerated.size());

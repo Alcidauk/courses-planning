@@ -81,7 +81,7 @@ public class GenerateSessionsCalculateAvailableForPeriodTest {
         ArrayList<WorkSession> unavailableWorkSessions =
                 new ArrayList<>(Collections.singletonList(new WorkSession(startPeriodInstant, endPeriodInstant, unavailableType, false)));
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow);
         assertEquals(new ArrayList<>(), sessionGenerator.calculateAvailablePeriods());
     }
 
@@ -90,12 +90,12 @@ public class GenerateSessionsCalculateAvailableForPeriodTest {
         withNoSessionsDone();
         ArrayList<WorkSession> unavailableWorkSessions = new ArrayList<>();
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow);
 
         assertEquals(1, sessionGenerator.calculateAvailablePeriods().size());
         assertEquals(new DurationTime(
-                getLocalDateTimeFromInstant(startPeriodInstant),
-                getLocalDateTimeFromInstant(endPeriodInstant)),
+                CalendarUtils.getLocalDateTimeFromInstant(startPeriodInstant),
+                CalendarUtils.getLocalDateTimeFromInstant(endPeriodInstant)),
                 sessionGenerator.calculateAvailablePeriods().get(0)
         );
     }
@@ -106,12 +106,12 @@ public class GenerateSessionsCalculateAvailableForPeriodTest {
         ArrayList<WorkSession> unavailableWorkSessions = new ArrayList<>(
                 Collections.singletonList(new WorkSession(startPeriodInstant, startPeriodInstant.plus(Duration.ofHours(5L)), null, false)));
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow);
 
         assertEquals(1, sessionGenerator.calculateAvailablePeriods().size());
         assertEquals(new DurationTime(
-                getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(5L))),
-                getLocalDateTimeFromInstant(endPeriodInstant)),
+                CalendarUtils.getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(5L))),
+                CalendarUtils.getLocalDateTimeFromInstant(endPeriodInstant)),
                 sessionGenerator.calculateAvailablePeriods().get(0)
         );
     }
@@ -123,12 +123,12 @@ public class GenerateSessionsCalculateAvailableForPeriodTest {
                 Collections.singletonList(
                         new WorkSession(startPeriodInstant.plus(Duration.ofHours(5L)), endPeriodInstant, null, false)));
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow);
 
         assertEquals(1, sessionGenerator.calculateAvailablePeriods().size());
         assertEquals(new DurationTime(
-                getLocalDateTimeFromInstant(startPeriodInstant),
-                getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(5L)))),
+                CalendarUtils.getLocalDateTimeFromInstant(startPeriodInstant),
+                CalendarUtils.getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(5L)))),
                 sessionGenerator.calculateAvailablePeriods().get(0)
         );
     }
@@ -141,12 +141,12 @@ public class GenerateSessionsCalculateAvailableForPeriodTest {
                 new WorkSession(startPeriodInstant.plus(Duration.ofHours(5L)), startPeriodInstant.plus(Duration.ofHours(7L)), null, false)
         ));
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow);
 
         assertEquals(1, sessionGenerator.calculateAvailablePeriods().size());
         assertEquals(new DurationTime(
-                getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(7L))),
-                getLocalDateTimeFromInstant(endPeriodInstant)),
+                CalendarUtils.getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(7L))),
+                CalendarUtils.getLocalDateTimeFromInstant(endPeriodInstant)),
                 sessionGenerator.calculateAvailablePeriods().get(0)
         );
     }
@@ -159,20 +159,16 @@ public class GenerateSessionsCalculateAvailableForPeriodTest {
                 new WorkSession(startPeriodInstant.plus(Duration.ofHours(5L)), startPeriodInstant.plus(Duration.ofHours(7L)), null, false)
         ));
 
-        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow, 0);
+        SessionGenerator sessionGenerator = new SessionGenerator(planningPeriod, unavailableWorkSessions, null, workSessionRepository, oldNow);
         List<DurationTime> availableDurationTime = sessionGenerator.calculateAvailablePeriods();
 
         assertEquals(2, availableDurationTime.size());
         assertThat(availableDurationTime, Matchers.contains(
-                new DurationTime(getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(4L))),
-                        getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(5L)))),
-                new DurationTime(getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(7L))),
-                        getLocalDateTimeFromInstant(endPeriodInstant))
+                new DurationTime(CalendarUtils.getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(4L))),
+                        CalendarUtils.getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(5L)))),
+                new DurationTime(CalendarUtils.getLocalDateTimeFromInstant(startPeriodInstant.plus(Duration.ofHours(7L))),
+                        CalendarUtils.getLocalDateTimeFromInstant(endPeriodInstant))
                 )
         );
-    }
-
-    private LocalDateTime getLocalDateTimeFromInstant(Instant instant){
-        return CalendarUtils.getLocalDateTimeFromInstant(instant, 0);
     }
 }
