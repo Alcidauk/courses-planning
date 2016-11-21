@@ -50,7 +50,9 @@ public class WorkSessionSettingsWindow extends Window {
         doneCheck = new CheckBox(Messages.getMessage("com.alcidauk.courses.planning.work.session.done"));
 
         descriptionTxt = new TextArea(Messages.getMessage("com.alcidauk.courses.planning.work.session.description") + " :");
+        descriptionTxt.setNullRepresentation("");
         titleField = new TextField(Messages.getMessage("com.alcidauk.courses.planning.work.session.title") + " :");
+        titleField.setNullRepresentation("");
 
         BeanItemContainer<WorkSessionType> notSystemSessionTypes = new BeanItemContainer<>(WorkSessionType.class,
                 workSessionTypeRepository.findNotSystem());
@@ -112,6 +114,7 @@ public class WorkSessionSettingsWindow extends Window {
         subContent.addComponent(doneCheck);
 
         setCaption(workSessionCalendarEventBean.getCaption());
+
         setContent(subContent);
     }
 
