@@ -97,6 +97,9 @@ public class ChooseHoursWindow extends Window {
                 }
             });
 
+            planningPeriodEventTypesGrid.setEditorCancelCaption(Messages.getMessage("com.alcidauk.courses.planning.choose.hours.cancel"));
+            planningPeriodEventTypesGrid.setEditorSaveCaption(Messages.getMessage("com.alcidauk.courses.planning.choose.hours.save"));
+
             mainLayout.addComponent(planningPeriodEventTypesGrid);
         }
 
