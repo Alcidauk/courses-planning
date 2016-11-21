@@ -7,9 +7,12 @@ import com.alcidauk.data.repository.WorkSessionRepository;
 import com.alcidauk.ui.calendar.CalendarUtils;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,8 +67,10 @@ public class SessionGenerator {
      * remove sessions that will be erased by the new generation of sessions between now and the end of the period
      */
     private void cleanExistingSessionsAfterNow() {
+        Instant nowInstant = now.truncatedTo(ChronoUnit.HOURS).toInstant(ZoneOffset.UTC);
+
         List<WorkSession> sessionsToRemove =
-                workSessionRepository.findNotSystemBetweenStartInstantAndEndInstant(now.toInstant(ZoneOffset.UTC), period.getEndInstant());
+                workSessionRepository.findNotSystemBetweenStartInstantAndEndInstant(nowInstant, period.getEndInstant());
         workSessionRepository.delete(sessionsToRemove);
     }
 
